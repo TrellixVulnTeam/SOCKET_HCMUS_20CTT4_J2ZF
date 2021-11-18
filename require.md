@@ -1,3 +1,15 @@
+------------------------------------------Lưu ý----------------------------------------------------
+Sau khi clone về
+* Khi dùng python:
+- với windows thì dùng lệnh:
+Set-ExecutionPolicy -ExecutionPolicy RemoteSign -Scope Process
+sau đó
+.\venvWinDows\Scripts\activate
+* Sau khi dùng lệnh pip để tải thư viện gì thì sau khi tải thư viện về thì dùng tiếp lệnh
+pip freeze > requirements.txt
+* Sau khi kéo (pull) về thì dùng lệnh sau để update thư viện
+pip install -r .\requirements.txt
+---------------------------------------------------------------------------------------------------
 1 Xử lý socket
 KẾT NỐI NHIỀU THIẾT BỊ - Khải
 SOCKET (CLIENT) - MÁY THẬT MÁY KHÁC - Luật
