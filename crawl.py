@@ -2,7 +2,7 @@ import requests
 import json
 import time
 import os
-
+from bstTree import *
 class crawlDataCov:
   def __init__(self) -> None:
     # source data from https://ncov.moh.gov.vn/
@@ -44,11 +44,22 @@ class crawlDataCov:
     self.__dataFileCov.write("\n]")
     self.__dataFileCov.close()
 
-  # def query(self, name):
+  def query(self, name):
+    self.__dataFileCov = open(self.__pathToDataCov,)
+    __dataCov = json.load(self.__dataFileCov)
+    self.__dataFileCov.close()
+    __rootCov = None
+    __covAVLtree = AVLtree()
+    __keyName = "name"
+    for __dataCovProvince in __dataCov:
+      __rootCov = __covAVLtree.insert(__rootCov, __dataCovProvince, __keyName)
+    __result = __covAVLtree.search(__rootCov, name, __keyName)
+    return __result.val
 
 def main():
     cov = crawlDataCov()
-    cov.run()
+    # cov.run()
+    print(cov.query("TP. Hồ Chí Minh"))
 
 if __name__ == "__main__":
     main()
