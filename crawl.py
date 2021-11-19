@@ -27,13 +27,10 @@ class crawlDataCov:
     return __dataCov["locations"]
 
   def writeToLocal(self):
-    # self.__dataFileCov.seek(0, os.SEEK_END)
     if(os.path.exists(self.__pathToDataCov)):
-      # os.remove(self.__pathToDataCov)
       self.__dataFileCov = open(self.__pathToDataCov, "w")
     else:
       self.__dataFileCov = open(self.__pathToDataCov, "x")
-    # json.dump(self.__dataCov,self.__dataFileCov)
     self.__dataFileCov.write("[\n")
     for __dataCovProvince in self.__dataCov:
       self.__dataFileCov.write("\t")
