@@ -44,7 +44,10 @@ class userDB(object):
         return __result.val
 
 def main():
-    a = user("k","1")
+    username = "b"
+    password = "1"
+    a = user(username,password)
     db = userDB()
-    print(db.query("b"))
+    # print(db.query("b"))
+    print(db.query(username))
 main()

@@ -45,8 +45,8 @@ class clientApp(App):
         global screen_manager
         screen_manager = clientWindow()
         Builder.load_file("clientScreen.kv")
-        screen_manager.add_widget(signUp())
         screen_manager.add_widget(connectServer())
+        screen_manager.add_widget(signUp())
         screen_manager.add_widget(progressConnect())
         screen_manager.add_widget(log())
         screen_manager.add_widget(logIn())

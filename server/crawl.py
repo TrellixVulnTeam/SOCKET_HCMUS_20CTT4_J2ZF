@@ -57,7 +57,9 @@ class crawlDataCov:
 def main():
     cov = crawlDataCov()
     # cov.run()
-    print(cov.query("TP. Hồ Chí Minh"))
+    str = "TP. Hồ Chí Minh"
+    print(cov.query(str)["casesToday"])
+    # cov.run()
 
 if __name__ == "__main__":
     main()

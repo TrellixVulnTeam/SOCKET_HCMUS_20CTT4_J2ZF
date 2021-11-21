@@ -26,18 +26,20 @@ DATA (LƯU JSON)
 THÔNG TIN ĐĂNG NHẬP (XONG)
 
 CLIENT {
-    SOCKET
-    Giao diện (Đăng nhập - Đăng ký + Hiển thị lỗi (LỖI KẾT NỐI + LỖI ĐĂNG NHẬP KHÔNG THÀNH CÔNG + LỖI NHẬP TÊN SAI))
-    Chức năng chuẩn hóa dữ liệu tên tỉnh
-    MESSAGE ??
+    SOCKET (OK)
+    Giao diện (Kết nối tới server + Đăng nhập - Đăng ký + Query + LOG OUT (ngắt kết nối server) + Hiển thị lỗi (LỖI KẾT NỐI + LỖI ĐĂNG NHẬP KHÔNG THÀNH CÔNG + LỖI NHẬP TÊN SAI)) (Khải Khánh)
+    Chức năng chuẩn hóa dữ liệu tên tỉnh (Viết tắt + Gợi ý) ()
+    MESSAGE ?? (GUI xử lý sự kiện) (cuối)
 }
 
 SERVER {
-    SOCKET
-    Chứa THÔNG TIN TÀI KHOẢN, DATA COVID
-    Giao diện (???)
-    MESSAGE ?
+    SOCKET (OK)
+    Chứa THÔNG TIN TÀI KHOẢN, DATA COVID (OK)
+    Giao diện (status (nó đang kết nối với ai IP PORT + Status (đang kết nối + mất kết nối) + Server (on/off)) (Luật)
+    MESSAGE ?? (GUI xử lý sự kiện) (cuối)
 }
+
+(T5 25/11/2021)
 
 Cộng nghệ quản lý đồ án:
 github
