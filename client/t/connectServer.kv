@@ -1,0 +1,44 @@
+#:kivy 2.0.0
+#: import Screen kivy.uix.screenmanager.Screen
+#: import FadeTransition kivy.uix.screenmanager.FadeTransition
+
+<connectServer>:
+    name: "connect"
+    canvas.before:
+        Color:
+            rgb: 229/255, 229/255, 229/255,1
+        Rectangle:
+            size: self.size
+            pos: self.pos
+    FloatLayout:
+        # bg_color: 229/255, 229/255, 229/255, 1
+        Image:
+            source: ".\img\covid@1x.png"
+            size_hint: 1, 1
+            pos_hint: {"center_x": .5, "center_y": .7}
+            canvas.before:
+                Color:
+                    rgb: 229/255, 229/255, 229/255,1
+                Ellipse:
+                    size: 130, 130
+                    pos: 110, 250
+        HoverButton: 
+            text: "Connect to SkyCOVID"
+            # background_color: 11/255, 13/255, 26/255, 1
+            font_name: ".\\fonts\\poppins\\Poppins-Medium.ttf"
+            font_size: "13sp"
+            text_color: 255/255, 255/255, 255/255,.8
+            size_hint: .5, .1
+            pos_hint: {"center_x": .5, "center_y": .3}
+            halign: "center"
+            canvas.before:
+                Color: 
+                    rgb: 11/255, 13/255, 26/255, 1
+                RoundedRectangle:
+                    size: self.size
+                    pos: self.pos
+                    radius: [2]
+            on_release: 
+                root.manager.transition = FadeTransition()
+                root.manager.transition.duration = .05
+                root.manager.current = "progressConnect"

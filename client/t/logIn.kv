@@ -1,0 +1,139 @@
+#:kivy 2.0.0
+#: import Screen kivy.uix.screenmanager.Screen
+#: import FadeTransition kivy.uix.screenmanager.FadeTransition
+
+<logIn>:
+    name: "logIn"
+    canvas.before:
+        Color:
+            rgb: 229/255, 229/255, 229/255,1
+        Rectangle:
+            size: self.size
+            pos: self.pos
+    FloatLayout:
+        Image:
+            source: ".\\img\\covid@0.5x.png"
+            size_hint: 1, 1
+            pos_hint: {"center_x": .5, "center_y": .85}
+        Label:
+            id: "sologan"
+            text: "LOG IN WITH YOUR ACCOUNT"
+            color: 73/255, 75/255, 89/255, 1
+            pos_hint: {"center_x": .5, "center_y": .685}
+            halign: "center"
+            font_name: ".\\fonts\\poppins\\Poppins-Regular.ttf"
+            font_size: "23sp"
+        FloatLayout:
+            id: "username_layout"
+            size_hint: .5, .1
+            pos_hint: {"center_x": .5, "center_y": .57}
+            Label:
+                id: "username"
+                text: "username"
+                color: 73/255, 75/255, 89/255, 1
+                font_name: ".\\fonts\\poppins\\Poppins-Regular.ttf"
+                font_size: "10sp"
+                pos_hint: {"center_x": .1, "center_y": .9}
+            TextInput:
+                size_hint_y: .8
+                id: "username__box"
+                pos_hint: {"center_x": .5, "center_y": .1}
+                text: "username"
+                background_color: 229/255, 229/255, 229/255,1
+                cursor_color: 11/255, 13/255, 26/255, 1
+                cursor_width: "1sp"
+                font_name: ".\\fonts\\poppins\\Poppins-Regular.ttf"
+                font_size: "13sp"
+                multiline: False
+                foreground_color: 11/255, 13/255, 26/255, 1
+                border: 1, 0, 0, 0
+                # canvas.before:
+                #     # Draw border first
+                #     Color:
+                #         rgba: 0,0,0,1
+                #     Rectangle:
+                #         size: self.size
+                #         pos: self.pos
+                #         # radius: [2]
+
+                #     # Draw background (covers most of the above border)
+                #     Color:
+                #         rgba: self.background_color
+                #     Rectangle:
+                #         size: (self.width - self.border[1] - self.border[3], self.height - self.border[0] - self.border[2])
+                #         pos: (self.x + self.border[3], self.y + self.border[0])
+
+                #     # set the color for the text
+                #     Color:
+                #         rgba: self.foreground_color
+            Image:
+                id: "userIcon"
+                source: ".\\img\\user.png"
+                size_hint: 1, 1
+                pos_hint: {"center_x": .95, "center_y": .1}
+            
+        FloatLayout:
+            id: "password"
+            size_hint: .5, .1
+            pos_hint: {"center_x": .5, "center_y": .43}
+            Label:
+                id: "password_label"
+                text: "password"
+                color: 73/255, 75/255, 89/255, 1
+                font_name: ".\\fonts\\poppins\\Poppins-Regular.ttf"
+                font_size: "10sp"
+                pos_hint: {"center_x": .1, "center_y": .9}
+            TextInput:
+                size_hint_y: .8
+                id: "password__box"
+                pos_hint: {"center_x": .5, "center_y": .1}
+                text: "username"
+                background_color: 229/255, 229/255, 229/255,1
+                cursor_color: 11/255, 13/255, 26/255, 1
+                cursor_width: "1sp"
+                font_name: ".\\fonts\\poppins\\Poppins-Regular.ttf"
+                font_size: "13sp"
+                multiline: False
+                foreground_color: 11/255, 13/255, 26/255, 1
+                border: 1, 0, 0, 0
+                # canvas.before:
+                #     # Draw border first
+                #     Color:
+                #         rgba: 0,0,0,1
+                #     Rectangle:
+                #         size: self.size
+                #         pos: self.pos
+                #         # radius: [2]
+
+                #     # Draw background (covers most of the above border)
+                #     Color:
+                #         rgba: self.background_color
+                #     Rectangle:
+                #         size: (self.width - self.border[1] - self.border[3], self.height - self.border[0] - self.border[2])
+                #         pos: (self.x + self.border[3], self.y + self.border[0])
+
+                #     # set the color for the text
+                #     Color:
+                #         rgba: self.foreground_color
+            Image:
+                id: "userIcon"
+                source: ".\\img\\pass.png"
+                size_hint: 1, 1
+                pos_hint: {"center_x": .95, "center_y": .1}
+                
+        HoverButton:
+            text: "Log in"
+            pos_hint: {"center_x": .5, "center_y": .25}
+            size_hint: .5, .1
+            # background_color: 11/255, 13/255, 26/255, 1
+            font_name: ".\\fonts\\poppins\\Poppins-Medium.ttf"
+            font_size: "13sp"
+            text_color: 255/255, 255/255, 255/255,.8
+            halign: "center"
+            canvas.before:
+                Color: 
+                    rgb: 11/255, 13/255, 26/255, 1
+                RoundedRectangle:
+                    size: self.size
+                    pos: self.pos
+                    radius: [2]

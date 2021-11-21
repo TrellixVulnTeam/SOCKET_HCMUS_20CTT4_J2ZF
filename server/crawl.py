@@ -17,6 +17,7 @@ class crawlDataCov:
       __currentTime = time.time()
       __elapsedTime = __currentTime - __startTime
       if __elapsedTime == __timeLoop or __elapsedTime == 0:
+        __startTime = time.time()
         self.__dataCov = self.crawlData()
         self.writeToLocal()
   

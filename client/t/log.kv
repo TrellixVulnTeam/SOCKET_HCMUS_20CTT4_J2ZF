@@ -1,0 +1,54 @@
+#:kivy 2.0.0
+#: import Screen kivy.uix.screenmanager.Screen
+#: import FadeTransition kivy.uix.screenmanager.FadeTransition
+
+<log>:
+    name: "log"
+    canvas.before:
+        Color:
+            rgb: 229/255, 229/255, 229/255,1
+        Rectangle:
+            size: self.size
+            pos: self.pos
+    FloatLayout:
+        Image:
+            source: ".\img\covid@1x.png"
+            size_hint: 1, 1
+            pos_hint: {"center_x": .5, "center_y": .75}
+            canvas.before:
+                Color:
+                    rgb: 229/255, 229/255, 229/255,1
+                Ellipse:
+                    size: 130, 130
+                    pos: 110, 250
+        Label:
+            text: "WELCOM TO SKYCOVID"
+            text_color: 0/255, 0/255, 0/255, 1
+            pos_hint: {"center_x": .5, "center_y": .45}
+            halign: "center"
+            font_name: ".\\fonts\\poppins\\Poppins-Regular.ttf"
+            font_size: "23sp"
+            color: 73/255, 75/255, 89/255, 1
+        HoverButton:
+            text: "Log in"
+            pos_hint: {"center_x": .35, "center_y": .25}
+        HoverButton:
+            text: "Sign up"
+            pos_hint: {"center_x": .65, "center_y": .25}
+
+            
+<HoverButton>:
+    # background_color: 11/255, 13/255, 26/255, 1
+    font_name: ".\\fonts\\poppins\\Poppins-Medium.ttf"
+    font_size: "13sp"
+    text_color: 255/255, 255/255, 255/255,.8
+    size_hint: .2, .1
+    
+    halign: "center"
+    canvas.before:
+        Color: 
+            rgb: 11/255, 13/255, 26/255, 1
+        RoundedRectangle:
+            size: self.size
+            pos: self.pos
+            radius: [2]
