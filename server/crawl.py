@@ -52,13 +52,13 @@ class crawlDataCov:
     for __dataCovProvince in __dataCov:
       __rootCov = __covAVLtree.insert(__rootCov, __dataCovProvince, __keyName)
     __result = __covAVLtree.search(__rootCov, name, __keyName)
-    return __result.val
+    return __result.val["casesToday"]
 
 def main():
     cov = crawlDataCov()
     # cov.run()
     str = "TP. Hồ Chí Minh"
-    a = cov.query(str)["casesToday"]
+    a = cov.query(str)
     print(a)
     # cov.run()
 

@@ -1,5 +1,5 @@
 import tkinter as tk
-from tkinter import Widget, ttk
+from tkinter import Frame, Toplevel, Widget, ttk
 from PIL import Image, ImageTk
 from connect import *
 from login import *
@@ -15,7 +15,8 @@ class App(tk.Tk):
         self.__HEIGHT = 360
         self.__WIDTH = 640
         self.initUI()
-        # self.showUpPage(turnup)
+        self.showError()
+        # self.showUpPage(signup)
         self.mainloop()
 
     def initUI(self):
@@ -42,6 +43,43 @@ class App(tk.Tk):
 
     def showUpPage(self, frameClass):
         self.layerFrames[frameClass].tkraise()
+
+    def showError(self):
+        popPageBGCOLOR = "#f0f0f0"
+        labelContentFGCOLOR = "#494b59"
+        labelErrorFGCOLOR = "#bb0000"
+        __BUTTONBGCOLOR = "#0b0d1a"
+        __BUTTONFGCOLOR = "#cecfd1"
+        __BUTTONBGCOLOR_AC = "#5c5e6b"
+        __BUTTONFGCOLOR_AC = "#ffffff"
+        __BUTTONFONT = "roboto 11 bold"
+        global pop
+        pop = Toplevel(self)
+        pop.title("Error")
+        pop.geometry("180x147")
+        pop.config(bg=popPageBGCOLOR)
+        pop.iconbitmap(r"./img/err.ico")
+        pop.resizable(width = False, height = False)
+
+        popFrame = tk.Frame(pop, bg = popPageBGCOLOR)
+        popFrame.place(x = 0, y = 0, width=180, height=147)       
+
+        labelErr = tk.Label(popFrame, text="Oops..", bg=popPageBGCOLOR, fg=labelContentFGCOLOR, font="roboto 24 normal")
+        labelErr.place(x=45 ,y=20)
+
+        labelErr = tk.Label(popFrame, text="404 Not Found", bg=popPageBGCOLOR, fg=labelErrorFGCOLOR, font="roboto 16 normal")
+        labelErr.place(x=18 ,y=55)
+
+        # sign up
+        againButton = tk.Button(popFrame, text = "Try Again", bg=__BUTTONBGCOLOR, fg=__BUTTONFGCOLOR, activebackground=__BUTTONBGCOLOR_AC, activeforeground=__BUTTONFGCOLOR_AC, font=__BUTTONFONT)
+        againButton.place(x=49, y=95, width=81, height=36)
+        # background on entering widget
+        againButton.bind("<Enter>", func=lambda e: againButton.config(
+        background=__BUTTONBGCOLOR_AC, cursor="hand2"))
+        # background color on leving widget
+        againButton.bind("<Leave>", func=lambda e: againButton.config(
+        background=__BUTTONBGCOLOR, cursor="hand2"))
+
 
 def main():
     u = App()

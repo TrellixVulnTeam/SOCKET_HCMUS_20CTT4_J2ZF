@@ -44,10 +44,12 @@ class userDB(object):
         return __result.val
 
 def main():
-    username = "b"
+    username = "c"
     password = "1"
     a = user(username,password)
     db = userDB()
+    db.writeToLocal(a)
+
     # print(db.query("b"))
     print(db.query(username))
 main()
