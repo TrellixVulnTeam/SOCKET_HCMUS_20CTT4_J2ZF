@@ -1,67 +1,49 @@
-import kivy
-kivy.require('2.0.0')
-from kivy.config import Config
-Config.set('graphics', 'resizable', False)
-Config.set('graphics', 'width', '480')
-Config.set('graphics', 'height', '320')
-from kivy.uix.screenmanager import ScreenManager, Screen, FadeTransition
-from kivy.app import App
-from kivy.lang import Builder
-from kivy.clock import Clock
-from kivy.core.window import Window
+import tkinter as tk
+from tkinter import Widget, ttk
+from PIL import Image, ImageTk
+from connect import *
+from login import *
+from signup import *
+from turnup import *
 
-class clientWindow(ScreenManager):
-    pass
-class connectServer(Screen):
-    pass
-class progressConnect(Screen):
-    pass
-class log(Screen):
-    pass
-class logIn(Screen):
-    pass
-class signUp(Screen):
-    pass
-class queryCovid(Screen):
-    pass
+class App(tk.Tk):
+    def __init__(self):
+        tk.Tk.__init__(self)
+        self.__BGCOLOR = "#ffffff"
+        self.__TITLE = "SkyCov Client"
+        self.__FAVICON = r"./img/favicon.ico"
+        self.__HEIGHT = 360
+        self.__WIDTH = 640
+        self.initUI()
+        # self.showUpPage(turnup)
+        self.mainloop()
 
-Builder.load_file("connectServer.kv")
-# Builder.load_file("progressConnect.kv")
-# Builder.load_file("log.kv")
-# Builder.load_file("logIn.kv")
-# Builder.load_file("signUp.kv")
-# Builder.load_file("queryCovid.kv")
+    def initUI(self):
+        self.geometry(str(self.__WIDTH) + "x" + str(self.__HEIGHT))
+        self.title(self.__TITLE)
+        self.iconbitmap(self.__FAVICON)
+        self.resizable(width = False, height = False)
 
-class clientApp(App):
-    __PROGRESS_VALUE = .8
+        # screen layer
+        self.__screen = tk.Frame()
+        self.__screen.configure(background="#fafafa")
 
-    def build(self):
-        global screen_manager
-        Window.clearcolor(229/255, 229/255, 229/255,1)
-    # def build(self):
-    #     global screen_manager
-    #     screen_manager.add_widget(connectServer())
-    #     Builder.load_file("clientScreen.kv")
-    #     screen_manager.add_widget(signUp())
-    #     screen_manager = clientWindow()
-    #     screen_manager.add_widget(progressConnect())
-    #     screen_manager.add_widget(log())
-    #     screen_manager.add_widget(logIn())
-    #     screen_manager.add_widget(queryCovid())
-    #     return screen_manager
+        self.__screen.pack(side="top", fill="both", expand=True)
+        self.__screen.grid_rowconfigure(0, weight=1)
+        self.__screen.grid_columnconfigure(0, weight=1)
 
-    # def toLog(self):
-    #     Clock.schedule_once(self.updateprocessValue, .5)
-    #     Clock.schedule_once(self.progressToLog, .5)
-    
-    # def updateprocessValue(self):
-    #     current = self.ids.progress_bar.value
-    #     self.ids.progress_bar.value = self.processConnectValue
+        self.layerFrames = {}
+        for fr in (connect, login, signup, turnup):
+            frame = fr(self.__screen)
+            frame.grid(row = 0, column = 0, sticky = "nsew")
+            self.layerFrames[fr] = frame
 
-    # def progressToLog(self):
-    #     if self.ids.progress_bar.value == 1:
-    #         screen_manager.current = "log"
-        
+        self.layerFrames[connect].tkraise()
 
-# run
-clientApp().run()
+    def showUpPage(self, frameClass):
+        self.layerFrames[frameClass].tkraise()
+
+def main():
+    u = App()
+if __name__ == "__main__":
+    main()
