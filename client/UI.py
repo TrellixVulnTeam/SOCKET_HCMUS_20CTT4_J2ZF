@@ -6,6 +6,7 @@ from login import *
 from signup import *
 from turnup import *
 
+
 class App(tk.Tk):
     def __init__(self):
         tk.Tk.__init__(self)
@@ -16,7 +17,7 @@ class App(tk.Tk):
         self.__WIDTH = 640
         self.initUI()
         self.showError()
-        # self.showUpPage(signup)
+        # self.showUpPage(turnup)
         self.mainloop()
 
     def initUI(self):
@@ -70,7 +71,7 @@ class App(tk.Tk):
         labelErr = tk.Label(popFrame, text="404 Not Found", bg=popPageBGCOLOR, fg=labelErrorFGCOLOR, font="roboto 16 normal")
         labelErr.place(x=18 ,y=55)
 
-        # sign up
+        # again button
         againButton = tk.Button(popFrame, text = "Try Again", bg=__BUTTONBGCOLOR, fg=__BUTTONFGCOLOR, activebackground=__BUTTONBGCOLOR_AC, activeforeground=__BUTTONFGCOLOR_AC, font=__BUTTONFONT)
         againButton.place(x=49, y=95, width=81, height=36)
         # background on entering widget

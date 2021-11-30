@@ -6,6 +6,7 @@ class TreeNode(object):
         self.height = 1
 
 class AVLtree(object):
+    notFound = "not found!!!"
     def insert(self, root, data, keyName):
         # implement normal BST tree
         if not root:
@@ -93,8 +94,8 @@ class AVLtree(object):
         self.preOrder(root.right)
     def search(self, root, name ,keyName):
         if not root:
-            return "not found!!!"
-        if root.val[str(keyName)] > name:
+            return self.notFound
+        if root.val[str(keyName)] > str(name):
             return self.search(root.left, name, keyName)
         elif root.val[str(keyName)] < name:
             return self.search(root.right, name, keyName)

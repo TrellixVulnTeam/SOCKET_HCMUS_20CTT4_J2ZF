@@ -45,7 +45,8 @@ class connect(tk.Frame):
         __ipInput.place(x=12, y=124, width=264, height=30)
         __portInput = EntryWithPlaceholder(__wrapper, "PORT", "#7d7f8e")
         __portInput.place(x=12, y=170, width=264, height=30)
-
+        
+        # connect button
         __connectButton = tk.Button(__wrapper, text = "Connect To Server", bg=__BUTTONBGCOLOR, fg=__BUTTONFGCOLOR, activebackground=__BUTTONBGCOLOR_AC, activeforeground=__BUTTONFGCOLOR_AC, font=__BUTTONFONT)
         __connectButton.place(x=60, y=216, width=173, height=36)
 

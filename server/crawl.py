@@ -54,13 +54,13 @@ class crawlDataCov:
     __result = __covAVLtree.search(__rootCov, name, __keyName)
     return __result.val["casesToday"]
 
-def main():
-    cov = crawlDataCov()
-    # cov.run()
-    str = "TP. Hồ Chí Minh"
-    a = cov.query(str)
-    print(a)
-    # cov.run()
+# def main():
+#     cov = crawlDataCov()
+#     # cov.run()
+#     str = "TP. Hồ Chí Minh"
+#     a = cov.query(str)
+#     print(a)
+#     # cov.run()
 
-if __name__ == "__main__":
-    main()
+# if __name__ == "__main__":
+#     main()
