@@ -8,16 +8,22 @@ from turnup import *
 
 
 class App(tk.Tk):
+    __BGCOLOR = "#ffffff"
+    __TITLE = "SkyCov Client"
+    __FAVICON = r"./img/favicon.ico"
+    __HEIGHT = 360
+    __WIDTH = 640
+    __BUTTONBGCOLOR = "#0b0d1a"
+    __BUTTONFGCOLOR = "#cecfd1"
+    __BUTTONBGCOLOR_AC = "#5c5e6b"
+    __BUTTONFGCOLOR_AC = "#ffffff"
+    __BUTTONFONT = "roboto 11 bold"
     def __init__(self):
         tk.Tk.__init__(self)
-        self.__BGCOLOR = "#ffffff"
-        self.__TITLE = "SkyCov Client"
-        self.__FAVICON = r"./img/favicon.ico"
-        self.__HEIGHT = 360
-        self.__WIDTH = 640
         self.initUI()
-        self.showError()
-        # self.showUpPage(turnup)
+        self.showUpPage(login)
+    
+    def run(self):
         self.mainloop()
 
     def initUI(self):
@@ -40,49 +46,58 @@ class App(tk.Tk):
             frame.grid(row = 0, column = 0, sticky = "nsew")
             self.layerFrames[fr] = frame
 
-        self.layerFrames[connect].tkraise()
+        self.layerFrames[connect].primaryFrame.tkraise()
 
     def showUpPage(self, frameClass):
-        self.layerFrames[frameClass].tkraise()
+        self.layerFrames[frameClass].primaryFrame.tkraise()
 
     def showError(self):
-        popPageBGCOLOR = "#f0f0f0"
-        labelContentFGCOLOR = "#494b59"
-        labelErrorFGCOLOR = "#bb0000"
-        __BUTTONBGCOLOR = "#0b0d1a"
-        __BUTTONFGCOLOR = "#cecfd1"
-        __BUTTONBGCOLOR_AC = "#5c5e6b"
-        __BUTTONFGCOLOR_AC = "#ffffff"
-        __BUTTONFONT = "roboto 11 bold"
-        global pop
-        pop = Toplevel(self)
+        __ErrorPageBGCOLOR = "#f0f0f0"
+        __LabelContentFGCOLOR = "#bb0000"
+        pop = tk.Toplevel()
         pop.title("Error")
-        pop.geometry("180x147")
-        pop.config(bg=popPageBGCOLOR)
+        pop.geometry("216x160")
+        pop.config(bg=__ErrorPageBGCOLOR)
         pop.iconbitmap(r"./img/err.ico")
         pop.resizable(width = False, height = False)
 
-        popFrame = tk.Frame(pop, bg = popPageBGCOLOR)
-        popFrame.place(x = 0, y = 0, width=180, height=147)       
+        __errFrame = tk.Frame(pop, bg = __ErrorPageBGCOLOR)
+        __errFrame.place(x = 0, y = 0, width=216, height=160)       
 
-        labelErr = tk.Label(popFrame, text="Oops..", bg=popPageBGCOLOR, fg=labelContentFGCOLOR, font="roboto 24 normal")
-        labelErr.place(x=45 ,y=20)
+        __labelErrContent = tk.Label(__errFrame, text="Server die :(", 
+            bg=__ErrorPageBGCOLOR, fg=__LabelContentFGCOLOR, 
+            font="roboto 24 normal")
+        __labelErrContent.place(x=20 ,y=8)
 
-        labelErr = tk.Label(popFrame, text="404 Not Found", bg=popPageBGCOLOR, fg=labelErrorFGCOLOR, font="roboto 16 normal")
-        labelErr.place(x=18 ,y=55)
+        __serverDieIcon = Image.open("./img/iconSerDie.png")
+        __icon = ImageTk.PhotoImage(__serverDieIcon)
+        __labelicon = tk.Label(__errFrame, image=__icon, bg=__ErrorPageBGCOLOR)
+        __labelicon.image = __icon
+        __labelicon.place(x=81 ,y=52)
 
         # again button
-        againButton = tk.Button(popFrame, text = "Try Again", bg=__BUTTONBGCOLOR, fg=__BUTTONFGCOLOR, activebackground=__BUTTONBGCOLOR_AC, activeforeground=__BUTTONFGCOLOR_AC, font=__BUTTONFONT)
-        againButton.place(x=49, y=95, width=81, height=36)
+        __againButton = tk.Button(__errFrame, text = "Try Again", 
+            bg=self.__BUTTONBGCOLOR, fg=self.__BUTTONFGCOLOR, 
+            activebackground=self.__BUTTONBGCOLOR_AC, activeforeground=self.__BUTTONFGCOLOR_AC, 
+            font=self.__BUTTONFONT)
+        __againButton.place(x=64, y=104, width=81, height=36)
         # background on entering widget
-        againButton.bind("<Enter>", func=lambda e: againButton.config(
-        background=__BUTTONBGCOLOR_AC, cursor="hand2"))
+        __againButton.bind("<Enter>", func=lambda e: __againButton.config(
+            background=self.__BUTTONBGCOLOR_AC, cursor="hand2"))
         # background color on leving widget
-        againButton.bind("<Leave>", func=lambda e: againButton.config(
-        background=__BUTTONBGCOLOR, cursor="hand2"))
+        __againButton.bind("<Leave>", func=lambda e: __againButton.config(
+            background=self.__BUTTONBGCOLOR, cursor="hand2"))
+        #try agian
+        __againButton.bind("<Button-1>", func=lambda e: pop.destroy())
 
 
-def main():
-    u = App()
-if __name__ == "__main__":
-    main()
+# def main():
+#     u = App()
+#     print(u.layerFrames[connect].data)
+#     # u.layerFrames[connect].showErrConnection()
+#     # u.layerFrames[signup].showErrorSignUP()
+#     # u.showError()
+
+#     u.run()
+# if __name__ == "__main__":
+#     main()

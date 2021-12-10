@@ -27,6 +27,9 @@ class App(tk.Tk):
     CONNECTING = "Connecting.."
     DISCONNECTED = "Disconnected"
     ERRORCONNECTION = "Error !!!"
+    ONLINE = True
+    OFFLINE = False
+    ISONLINE = ONLINE
     __USR = []
 
     def __init__(self):
@@ -64,7 +67,10 @@ class App(tk.Tk):
         
         # name page
         self.__labelName = tk.Label(self.__wrapper, text="Clients", bg = self.__WRAPCOLOR, fg = self.__NAMEPAGECOLOR, font = "roboto 18 bold")
-        self.__labelName.place(x=190, y=15)
+        self.__labelName.place(x=100, y=15)
+        # Server's IP address 
+        self.__serverIP = tk.Label(self.__wrapper, bg = self.__WRAPCOLOR, fg = self.__NAMEPAGECOLOR, font = "roboto 18 bold")
+        self.__serverIP.place(x=190, y=15)
         
         # close
         self.__closeButton = tk.Button(self.__screen, bg=self.__BUTTONBGCOLOR, fg=self.__BUTTONFGCOLOR,
@@ -132,38 +138,10 @@ class App(tk.Tk):
             for clientItem in self.__treeClients.get_children():
                 self.__treeClients.delete(clientItem)
             self.__USR.clear()
-            return self.__STATUSCONNECT
+            self.ISONLINE = self.OFFLINE
         else: 
             self.__closeButton["text"] = self.__STATUSCONNECT
-            return self.__STATUSDISCONNECT
-
-# def main():
-#     u = App()
-#     # u.run()
-#     # u.creatItemClient("127.128.203.207", 65041)
-#     # u.creatItemClient("127.128.203.208", 66041)
-#     # u.creatItemClient("127.128.203.209", 64041)
-#     # u.creatItemClient("127.128.203.207", 65045)
-#     # u.creatItemClient("127.128.243.207", 65044)
-#     # u.creatItemClient("127.128.213.207", 65048)
-#     # u.creatItemClient("127.18.233.207", 65049)
-#     # u.creatItemClient("127.18.203.207", 65054)
-#     # u.creatItemClient("127.128.23.24", 65064)
-#     # u.creatItemClient("128.128.23.27", 65024)
-#     # u.creatItemClient("122.128.203.23", 65044)
-#     # u.creatItemClient("233.128.203.23", 65044)
-#     u.creatItemClient("123.128.203.23", 65044)
-#     u.creatItemClient("112.128.203.23", 65044)
-#     u.creatItemClient("124.128.203.23", 65044)
-#     u.creatItemClient("154.128.203.23", 65044)
-#     u.creatItemClient("112.128.203.23", 65044)
-#     u.creatItemClient("134.128.203.23", 65044)
-#     u.creatItemClient("112.128.203.2", 65014)
-#     # u.creatItemClient("134.128.203.23", 65044, u.DISCONNECTED)
-#     # u.creatItemClient("112.128.203.2", 65014, u.ERRORCONNECTION)
-#     u.run()
-#     # u.creatItemClient("124.128.203.23", 65044, u.DISCONNECTED)
-
-
-# if __name__ == "__main__":
-#     main()
+            self.ISONLINE = self.ONLINE
+    
+    def showSerIP(self, ip):
+        self.__serverIP["text"] = str(ip)

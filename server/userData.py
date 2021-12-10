@@ -46,6 +46,20 @@ class userDB(object):
             return False
         return __result.val["password"] == userPass
 
+    def showUsername(self, username):
+        self.__dataFileUSR = open(self.__pathToDB,)
+        __USR = json.load(self.__dataFileUSR)
+        self.__dataFileUSR.close()
+        __rootUSR = None
+        __USRAVLtree = AVLtree()
+        __keyName = "username"
+        # build AVL tree for search username
+        for __dataOfUSR in __USR:
+            __rootUSR = __USRAVLtree.insert(__rootUSR, __dataOfUSR, __keyName)
+        __result = __USRAVLtree.search(__rootUSR, username, __keyName)
+        if __result == __USRAVLtree.notFound:
+            return False
+        return __result.val[__keyName]
 # def main():
 #     username = "c"
 #     password = "1"
@@ -55,4 +69,5 @@ class userDB(object):
 
 #     # print(db.check("b"))
 #     print(db.check(username, "1"))
+#     print(db.showUsername(username))
 # main()

@@ -4,10 +4,10 @@
 block_cipher = None
 
 
-a = Analysis(['server.py'],
+a = Analysis(['serverSoc.py', 'UI.py', 'crawl.py', 'bstTree.py', 'userData.py'],
              pathex=[],
              binaries=[],
-             datas=[],
+             datas=[('img','img'), ('fonts','fonts'), ('database','database')],
              hiddenimports=[],
              hookspath=[],
              hooksconfig={},

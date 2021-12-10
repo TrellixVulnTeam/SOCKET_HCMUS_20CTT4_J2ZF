@@ -97,7 +97,7 @@ class AVLtree(object):
             return self.notFound
         if root.val[str(keyName)] > str(name):
             return self.search(root.left, name, keyName)
-        elif root.val[str(keyName)] < name:
+        elif root.val[str(keyName)] < str(name):
             return self.search(root.right, name, keyName)
         else:
             return root
