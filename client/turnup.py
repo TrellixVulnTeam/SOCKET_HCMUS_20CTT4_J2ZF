@@ -21,6 +21,8 @@ class turnup(tk.Frame):
     __ERRORFLOATINGCOLOR = "#0b0d1a"
     data = {"value": None, "date": None}
     isLogOut = False
+    isTurnUp = False
+    isInTurnUpPage = False
 
     def __init__(self, parent):
         tk.Frame.__init__(self, parent)
@@ -122,6 +124,7 @@ class turnup(tk.Frame):
         __resultWrapp.rowconfigure(0, weight=1)
         # serial
         self.serial = 0
+
     def createItemTree(self, result, date, cases):
         self.serial = self.serial + 1
         __item = (self.serial, result, date, cases)
@@ -135,6 +138,7 @@ class turnup(tk.Frame):
     def readAndSend(self):
         if (self.__queryInput.get() != "New Username") and (
             self.__dateInput.get() != "dd/mm/yyyy"):
+            self.isTurnUp = True
             self.data["value"] = str(self.__queryInput.get())
             self.data["date"] = str(self.__dateInput.get())
 
@@ -189,7 +193,9 @@ class turnup(tk.Frame):
         #close warning
         __noButton.bind("<Button-1>", func=lambda e: __warning.destroy())
 
-    
     def toBackLogIn(self, windows):
         self.isLogOut = True
         windows.destroy()
+
+    def changeACN(self, name):
+        self.__labelUsername["text"] = name

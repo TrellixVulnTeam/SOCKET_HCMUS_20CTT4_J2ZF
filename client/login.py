@@ -22,7 +22,8 @@ class login(tk.Frame):
     isToSignUp = False
     isLogin = False
     isQuit = False
-
+    isInLogInPage = False
+    isError = False
     def __init__(self, parent):
         tk.Frame.__init__(self, parent)
         self.primaryFrame = tk.Frame(parent, bg=self.__BGCOLOR)
@@ -207,6 +208,7 @@ class login(tk.Frame):
         __againButton.bind("<Button-1>", func=lambda e: __errFrame.destroy())
 
     def showWrongLogIn(self):
+        self.isError = True
         __ErrorPageBGCOLOR = "#f0f0f0"
         __LabelContentFGCOLOR = "#bb0000"
         pop = tk.Toplevel()
@@ -243,5 +245,16 @@ class login(tk.Frame):
         __againButton.bind("<Leave>", func=lambda e: __againButton.config(
             background=self.__BUTTONBGCOLOR, cursor="hand2"))
         #try agian
-        __againButton.bind("<Button-1>", func=lambda e: pop.destroy())
+        __againButton.bind("<Button-1>", func=lambda e: self.clearError(pop))
  
+    def resetLogin(self):
+        self.data["username"] = None
+        self.data["password"] = None
+        self.isQuit = False
+        self.isLogin = False
+        self.__usInput.clear()
+        self.__passInput.clear()
+
+    def clearError(self, windows):
+        self.isError = False
+        windows.destroy()

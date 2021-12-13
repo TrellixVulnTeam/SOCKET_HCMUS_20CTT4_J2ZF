@@ -18,7 +18,6 @@ class serverSoc:
     # trigger command
     __LOGIN = "log in"
     __SIGNUP = "sign up"
-    __TURNUP = "turn up"
     __CONNECT = "connect"
     __DISCONNECTED = "quit"
     __TRACKING = "tracking"
@@ -31,6 +30,12 @@ class serverSoc:
     __STATUSCONNECT = "Close"
     __STATUSDISCONNECT = "Start"
 
+    __INLOGIN = "in Log In"
+    __INSIGNUP = "in Sign Up"
+    __INTURNUP = "in Turn Up"
+    __INCONNECT = "in Connect"
+
+
     def __init__(self):
         # crawl data covid from "https://static.pipezero.com/covid/data.json"
         # declare crawl data obj
@@ -42,9 +47,7 @@ class serverSoc:
         self.__userDB = userDB()
 
         # declare socket
-        self.__server = socket.socket(socket.AF_INET, socket.SOCK_STREAM) 
-        self.__server.bind(self.__ADDRESS)
-
+        self.__server = None
 
     def receive(self, conn):
         try:
@@ -52,6 +55,7 @@ class serverSoc:
             if header_msg:
                 header_msg_length = int(header_msg)
                 msg = conn.recv(header_msg_length).decode(self.__FORMAT)
+                print(msg)
                 return msg
         except:
             return None
@@ -65,52 +69,74 @@ class serverSoc:
             conn.send(message)
 
     def run(self):
-        self.__server.listen()
-        while True:
-            conn, addr = self.__server.accept() # conn is a pointer point to client if server connecting, addr is client's ip and port
-            self.ui.creatItemClient(addr[0], addr[1])
-            self.__CLIENTS.append(str(addr))
-            thread = threading.Thread(target=self.handle_client, args=(conn, addr))
-            thread.daemon = True
-            thread.start()
+        __isUIExist = True
+        while __isUIExist:
+            # init server
+            if self.ui.ISONLINE:
+                self.__server = socket.socket(socket.AF_INET, socket.SOCK_STREAM) 
+                self.__server.bind(self.__ADDRESS)
+                self.__server.listen()
+                __ISRUN = True
+            while __ISRUN:
+                conn, addr = self.__server.accept() # conn is a pointer point to client if server connecting, addr is client's ip and port
+                print(not self.ui.ISONLINE and len(self.__CLIENTS) == 0)
+                if not self.ui.ISONLINE and len(self.__CLIENTS) == 0:
+                    self.__server.close()
+                    __ISRUN = False
+                    break
+                if conn.fileno() != -1:
+                    self.ui.creatItemClient(addr[0], addr[1])
+                    self.__CLIENTS.append((conn,addr))
+                    thread = threading.Thread(target=self.handle_client, args=(conn, addr))
+                    thread.daemon = True
+                    thread.start()
+            __isUIExist = self.ui.winfo_exists()
 
     def handle_client(self,conn, addr):
         try:
             __ISRUN = True
             if not self.ui.ISONLINE:
                 self.send(conn, "close")
+                self.__CLIENTS.remove((conn,addr))
                 __ISRUN = False
             else:
                 self.send(conn, "open")
+                print("da handle")
             while __ISRUN:  
-                # thêm cái if này vào để lúc bắt đầu kết nối 
-                # thì kiểm tra xem server đang mở hay đóng
                 if not self.ui.ISONLINE: 
                     self.send(conn, "close")
+                    self.__CLIENTS.remove((conn,addr))
                     break
                 else:
                     self.send(conn, "open")
-                __isREQUEST = self.receive(conn)
-                if __isREQUEST == "NULL":
-                    self.__CLIENTS.remove(str(addr))
+                __REQUEST = self.receive(conn)
+
+                if __REQUEST == None:
+                    print(__REQUEST)
+                    self.__CLIENTS.remove((conn,addr))
                     self.ui.creatItemClient(addr[0], addr[1], self.__ERRORCONNECTIONSTATUS)
                     __ISRUN = False
                     break
-                if __isREQUEST == self.__DISCONNECTED:
-                    self.__CLIENTS.remove(str(addr))
+
+                if __REQUEST == self.__INLOGIN or __REQUEST == self.__INSIGNUP or __REQUEST == self.__INTURNUP:
+                    pass
+
+                # client close connect
+                if __REQUEST == self.__DISCONNECTED:
+                    self.__CLIENTS.remove((conn,addr))
                     self.ui.creatItemClient(addr[0], addr[1], self.__DISCONNECTEDSTATUS)
                     __ISRUN = False
                     break
-                if __isREQUEST == self.__SIGNUP:
+                if __REQUEST == self.__SIGNUP:
                     ID = self.receive(conn)
                     if ID == None:
-                        self.__CLIENTS.remove(str(addr))
+                        self.__CLIENTS.remove((conn,addr))
                         self.ui.creatItemClient(addr[0], addr[1], self.__ERRORCONNECTIONSTATUS)
                         __ISRUN = False
                         break
                     PASSWORD = self.receive(conn)
                     if PASSWORD == None:
-                        self.__CLIENTS.remove(str(addr))
+                        self.__CLIENTS.remove((conn,addr))
                         self.ui.creatItemClient(addr[0], addr[1], self.__ERRORCONNECTIONSTATUS)
                         __ISRUN = False
                         break
@@ -118,22 +144,23 @@ class serverSoc:
                         self.__userDB.showUsername(ID)
                         self.send(conn, "ID existed")                    
                     except:
+                        print("chay7")
                         account = user(ID, PASSWORD)
                         self.__userDB.writeToLocal(account)
                         self.send(conn, "sign up success")                       
                     continue
                 
-                if __isREQUEST == self.__LOGIN:
+                if __REQUEST == self.__LOGIN:
                     try:
                         ID = self.receive(conn)
                         if ID == None:
                             self.ui.creatItemClient(addr[0], addr[1], self.__ERRORCONNECTIONSTATUS)
-                            self.__CLIENTS.remove(str(addr))
+                            self.__CLIENTS.remove((conn,addr))
                             __ISRUN = False
                             break
                         PASSWORD = self.receive(conn)
                         if PASSWORD == None:
-                            self.__CLIENTS.remove(str(addr))
+                            self.__CLIENTS.remove((conn,addr))
                             self.ui.creatItemClient(addr[0], addr[1], self.__ERRORCONNECTIONSTATUS)
                             __ISRUN = False
                             break
@@ -144,11 +171,11 @@ class serverSoc:
                     except:
                         self.send(conn, "wrong id")
 
-                if __isREQUEST == self.__TRACKING:
+                if __REQUEST == self.__TRACKING:
                     msg = self.receive(conn)
                     if msg == "NULL":
                         self.ui.creatItemClient(addr[0], addr[1], self.__ERRORCONNECTIONSTATUS)
-                        self.__CLIENTS.remove(str(addr))
+                        self.__CLIENTS.remove((conn,addr))
                         __ISRUN = False
                         break
                     data = str(self.crData.query(msg))
@@ -156,7 +183,7 @@ class serverSoc:
             conn.close()
         except:
             conn.close()
-            self.__CLIENTS.remove(str(addr))
+            self.__CLIENTS.remove((conn,addr))
             self.ui.creatItemClient(addr[0], addr[1], self.__ERRORCONNECTIONSTATUS)
 
 def main():

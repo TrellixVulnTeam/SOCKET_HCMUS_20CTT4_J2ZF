@@ -19,6 +19,9 @@ class connect(tk.Frame):
     __WRAPCOLOR = "#f0f0f0"
     __ERRORFLOATINGCOLOR = "#0b0d1a"
     data =  {"ip": None}
+    isError = False
+    isInConnectPage = False
+
     def __init__(self, parent):
         tk.Frame.__init__(self, parent)
         self.primaryFrame = tk.Frame(parent, bg=self.__BGCOLOR)
@@ -45,31 +48,33 @@ class connect(tk.Frame):
          # connect button
         __connectButton = tk.Button(__wrapper, text = "Connect To Server", bg=self.__BUTTONBGCOLOR, fg=self.__BUTTONFGCOLOR, activebackground=self.__BUTTONBGCOLOR_AC, activeforeground=self.__BUTTONFGCOLOR_AC, font=self.__BUTTONFONT)
         __connectButton.place(x=60, y=196, width=173, height=36)
-        # background on entering widget
         __connectButton.bind("<Enter>", func=lambda e: __connectButton.config(
         background=self.__BUTTONBGCOLOR_AC, cursor="hand2"))
-        # background color on leving widget
         __connectButton.bind("<Leave>", func=lambda e: __connectButton.config(
         background=self.__BUTTONBGCOLOR))
         # clicked to send data
         __connectButton.bind("<Button-1>", func=lambda e: self.readAndSend())
+    
     #read data from entry
     def readAndSend(self):
         if self.__ipInput.get() != "IP address":
             self.data["ip"] = str(self.__ipInput.get())
     
     def showErrConnection(self):
+        # change isError
+        self.isError = True
+        # show UI error
         __ErrorPageBGCOLOR = "#f0f0f0"
         __LabelContentFGCOLOR = "#494b59"
         __LabelErrorFGCOLOR = "#bb0000"
-        pop = tk.Toplevel()
-        pop.title("Error")
-        pop.geometry("180x147")
-        pop.config(bg=__ErrorPageBGCOLOR)
-        pop.iconbitmap(r"./img/err.ico")
-        pop.resizable(width = False, height = False)
+        self.__errWindows = tk.Toplevel()
+        self.__errWindows.title("Error")
+        self.__errWindows.geometry("180x147")
+        self.__errWindows.config(bg=__ErrorPageBGCOLOR)
+        self.__errWindows.iconbitmap(r"./img/err.ico")
+        self.__errWindows.resizable(width = False, height = False)
 
-        __errFrame = tk.Frame(pop, bg = __ErrorPageBGCOLOR)
+        __errFrame = tk.Frame(self.__errWindows, bg = __ErrorPageBGCOLOR)
         __errFrame.place(x = 0, y = 0, width=180, height=147)       
 
         __labelErrContent = tk.Label(__errFrame, text="Oops..", 
@@ -95,4 +100,17 @@ class connect(tk.Frame):
         __againButton.bind("<Leave>", func=lambda e: __againButton.config(
             background=self.__BUTTONBGCOLOR, cursor="hand2"))
         #try agian
-        __againButton.bind("<Button-1>", func=lambda e: pop.destroy())
+        __againButton.bind("<Button-1>", func=lambda e: self.tryAgain(self.__errWindows))
+
+        self.__errWindows.protocol("WM_DELETE_WINDOW", self.closePop)
+
+    def tryAgain(self, windows):
+        self.isError = False
+        self.data["ip"] = None
+        self.__ipInput.delete('0', 'end')
+        windows.destroy()
+    
+    def closePop(self):
+        self.isError = False
+        self.data["ip"] = None
+        self.__errWindows.destroy()

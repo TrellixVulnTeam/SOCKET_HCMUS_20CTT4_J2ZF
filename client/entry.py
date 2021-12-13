@@ -39,6 +39,13 @@ class EntryWithPlaceholder(tk.Entry):
     def foc_out(self, *args):
         if not self.get():
             self.put_placeholder()
+
+    def clear(self, *args):
+        if self['fg'] == self.default_fg_color:
+            self.delete('0', 'end')
+            self.put_placeholder()
+            if self.__PASSWORD == "yes":
+                self['show'] = "*"
 class EntryWithPickerDay(tk.Entry):
     def __init__(self, master=None, placeholder="dd/mm/yyyy", color='grey'):
         super().__init__(master)

@@ -21,6 +21,8 @@ class signup(tk.Frame):
     data = {"new username": None, "new password": None}
     isBackPage = False
     isSignUp = False
+    isInSignUpPage = False
+    isError = False
     def __init__(self, parent):
         tk.Frame.__init__(self, parent)
         self.primaryFrame = tk.Frame(parent, bg=self.__BGCOLOR)
@@ -91,10 +93,11 @@ class signup(tk.Frame):
             self.__confirmPassInput.get() != "Confirm password"):
             if self.__newpassInput.get() != self.__confirmPassInput.get():
                 self.__showWarning()
-            self.isSignUp = True
-            self.isBackPage = True
-            self.data["new username"] = str(self.__newusInput.get())
-            self.data["new password"] = str(self.__newpassInput.get())
+            else:
+                self.isSignUp = True
+                self.isBackPage = True
+                self.data["new username"] = str(self.__newusInput.get())
+                self.data["new password"] = str(self.__newpassInput.get())
 
     def toBack(self):
         self.isBackPage = True
@@ -136,6 +139,7 @@ class signup(tk.Frame):
         __againButton.bind("<Button-1>", func=lambda e: __warning.destroy())
 
     def showErrorSignUP(self):
+        self.isError = True
         __ErrorPageBGCOLOR = "#f0f0f0"
         __LabelContentFGCOLOR = "#bb0000"
         pop = tk.Toplevel()
@@ -172,4 +176,8 @@ class signup(tk.Frame):
         __againButton.bind("<Leave>", func=lambda e: __againButton.config(
             background=self.__BUTTONBGCOLOR, cursor="hand2"))
         #try agian
-        __againButton.bind("<Button-1>", func=lambda e: pop.destroy())
+        __againButton.bind("<Button-1>", func=lambda e: self.clearError(pop))
+
+    def clearError(self, windows):
+        self.isError = False
+        windows.destroy()

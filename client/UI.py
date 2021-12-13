@@ -18,6 +18,9 @@ class App(tk.Tk):
     __BUTTONBGCOLOR_AC = "#5c5e6b"
     __BUTTONFGCOLOR_AC = "#ffffff"
     __BUTTONFONT = "roboto 11 bold"
+
+    isError = False
+
     def __init__(self):
         tk.Tk.__init__(self)
         self.initUI()
@@ -88,12 +91,17 @@ class App(tk.Tk):
         __againButton.bind("<Leave>", func=lambda e: __againButton.config(
             background=self.__BUTTONBGCOLOR, cursor="hand2"))
         #try agian
-        __againButton.bind("<Button-1>", func=lambda e: pop.destroy())
+        __againButton.bind("<Button-1>", func=lambda e: self.clearError(pop))
 
+    def clearError(self, windows):
+        self.isError = True
+        windows.destroy()
 
 # def main():
 #     u = App()
-#     print(u.layerFrames[connect].data)
+#     u.showUpPage(turnup)
+#     u.layerFrames[turnup].createItemTree("TP. Hồ Chí Minh", "11/12/2021", "1111")
+#     # print(u.layerFrames[connect].data)
 #     # u.layerFrames[connect].showErrConnection()
 #     # u.layerFrames[signup].showErrorSignUP()
 #     # u.showError()
