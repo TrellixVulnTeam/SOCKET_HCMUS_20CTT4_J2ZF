@@ -181,6 +181,7 @@ class serverSoc:
                         self.send(conn, "wrong id")
 
                 if __REQUEST == self.__TRACKING:
+                    # receive value (name)
                     msg = self.receive(conn)
                     if msg == "NULL":
                         self.ui.creatItemClient(
@@ -190,6 +191,10 @@ class serverSoc:
                         break
                     data = str(self.crData.query(msg))
                     self.send(conn, data)
+                    # receive date
+                    date = self.receive(conn)
+                    self.send(date)
+                    
             conn.close()
         except:
             conn.close()

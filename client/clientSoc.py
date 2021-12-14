@@ -94,8 +94,7 @@ class clientSoc:
                         if self.receive() != self.__CONNEXISTED:
                             __isRUN = False
                             if not self.ui.layerFrames[connect].isError:
-                                self.ui.layerFrames[connect].showErrConnection(
-                                )
+                                self.ui.layerFrames[connect].showErrConnection()
                 except:
                     if not self.ui.layerFrames[connect].isError:
                         self.ui.layerFrames[connect].showErrConnection()
