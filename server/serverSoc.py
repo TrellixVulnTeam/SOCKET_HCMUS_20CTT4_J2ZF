@@ -67,7 +67,7 @@ class serverSoc:
             send_length += b' ' * (self.__HEADER_SIZE - len(send_length))
             conn.send(send_length)
             conn.send(message)
-
+            print(message)
     def run(self):
         __isUIExist = True
         while __isUIExist:

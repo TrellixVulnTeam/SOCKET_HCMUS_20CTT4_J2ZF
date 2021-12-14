@@ -7,7 +7,7 @@ from time import gmtime, strftime
 class App(tk.Tk):
     __TEXTCOLOR = "#494b59"
     __BGCOLOR = "#ffffff"
-    __TITLE = "SkyCov Client"
+    __TITLE = "SkyCov Server"
     __FAVICON = r"./img/serverIcon.ico"
     __HEIGHT = 540
     __WIDTH = 960
