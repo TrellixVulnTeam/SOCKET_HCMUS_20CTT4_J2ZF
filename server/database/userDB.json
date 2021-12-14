@@ -1,7 +1,22 @@
-[
-	{"username": "test", "password": "2"},
-	{"username": "c", "password": "1"},
-	{"username": "c", "password": "1"},
-	{"username": "khai", "password": "1234"},
-	{"username": "j", "password": "1"}
-]
+{
+  "b": {
+    "username": "b",
+    "password": "1"
+  },
+  "c": {
+    "username": "c",
+    "password": "1"
+  },
+  "khai": {
+    "username": "khai",
+    "password": "nguyen"
+  },
+  "tuan": {
+    "username": "tuan",
+    "password": "khai"
+  },
+  "tuankhai": {
+    "username": "tuankhai",
+    "password": "nguyen"
+  }
+}

@@ -95,7 +95,6 @@ class signup(tk.Frame):
                 self.__showWarning()
             else:
                 self.isSignUp = True
-                self.isBackPage = True
                 self.data["new username"] = str(self.__newusInput.get())
                 self.data["new password"] = str(self.__newpassInput.get())
 
@@ -181,3 +180,11 @@ class signup(tk.Frame):
     def clearError(self, windows):
         self.isError = False
         windows.destroy()
+
+    def resetSignUp(self):
+        self.isQuit = False
+        self.isLogin = False
+        self.__newusInput.clear()
+        self.__newpassInput.clear()
+        self.__confirmPassInput.clear()
+        

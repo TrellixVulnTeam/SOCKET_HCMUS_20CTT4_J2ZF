@@ -7,19 +7,20 @@ from login import *
 from signup import *
 from turnup import *
 
+
 class clientSoc:
-    #socket value
+    # socket value
     __HEADER_SIZE = 64
     __FORMAT = 'utf-8'
     __PORT = 54321
     __HOST = None
-    
-    #trigger command
+
+    # trigger command
     __DISCONNECTED = "quit"
-    __LOGIN = "log in" 
-    __SIGNUP = "sign up" 
+    __LOGIN = "log in"
+    __SIGNUP = "sign up"
     __TRACKING = "tracking"
-    __LOGOUT = "log out" 
+    __LOGOUT = "log out"
     __IDEXISTED = "ID existed"
     __LOGINSUCCESSFUL = "login successful"
     __WRONGPASS = "wrong password"
@@ -38,13 +39,16 @@ class clientSoc:
     __INSIGNUP = "in Sign Up"
     __INTURNUP = "in Turn Up"
     __INCONNECT = "in Connect"
+    __AGAINCONNECT = 1
+    __REFRESH = 2
+
     def __init__(self):
         # declare UI obj
         self.ui = UI.App()
         # declare socket
         self.__client = None
 
-    def send(self, msg): 
+    def send(self, msg):
         __message = msg.encode(self.__FORMAT)
         __msg_length = len(__message)
         __send_length = str(__msg_length).encode(self.__FORMAT)
@@ -54,7 +58,8 @@ class clientSoc:
         print(__message)
 
     def receive(self):
-        __header_msg = self.__client.recv(self.__HEADER_SIZE).decode(self.__FORMAT)
+        __header_msg = self.__client.recv(
+            self.__HEADER_SIZE).decode(self.__FORMAT)
         if __header_msg:
             header_msg_length = int(__header_msg)
             msg = self.__client.recv(header_msg_length).decode(self.__FORMAT)
@@ -62,12 +67,14 @@ class clientSoc:
             return msg
 
     def run(self):
-        # while the UI object is existing, a socket object will be inited, ran and 
+        # while the UI object is existing, a socket object will be inited, ran and
         # closed until the UI object is dead
+        # try:
         __isUIExist = True
         while __isUIExist:
             # init socket client TCP
-            self.__client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            self.__client = socket.socket(
+                socket.AF_INET, socket.SOCK_STREAM)
             __isBEGIN = True
             while __isBEGIN:
                 __isRUN = False
@@ -78,7 +85,8 @@ class clientSoc:
                     self.ui.layerFrames[connect].isInConnectPage = True
                     self.__HOST = self.ui.layerFrames[connect].data["ip"]
                     if self.__HOST:
-                        self.ui.layerFrames[connect].data["ip"] = None #reset a ip variable
+                        # reset a ip variable
+                        self.ui.layerFrames[connect].data["ip"] = None
                         ADDRESS = (self.__HOST, self.__PORT)
                         self.__client.connect(ADDRESS)
                         __isRUN = True
@@ -86,22 +94,27 @@ class clientSoc:
                         if self.receive() != self.__CONNEXISTED:
                             __isRUN = False
                             if not self.ui.layerFrames[connect].isError:
-                                self.ui.layerFrames[connect].showErrConnection()     
+                                self.ui.layerFrames[connect].showErrConnection(
+                                )
                 except:
                     if not self.ui.layerFrames[connect].isError:
                         self.ui.layerFrames[connect].showErrConnection()
                     pass
-                # if connected, login page will be displayed. 
+                # if connected, login page will be displayed.
                 # And the communication is done.
                 if __isRUN:
-                    self.ui.showUpPage(login)
-                    self.ui.layerFrames[connect].isInConnectPage = False
-                    self.ui.layerFrames[login].isInLogInPage = True
-                    __STATUS = self.socket_client()
-                    if __STATUS == 1:
+                    while True:
+                        self.ui.showUpPage(login)
+                        self.ui.layerFrames[connect].isInConnectPage = False
+                        self.ui.layerFrames[login].isInLogInPage = True
+                        __STATUS = self.socket_client()
+                        if __STATUS == self.__AGAINCONNECT:
+                            break
+                    if __STATUS == self.__AGAINCONNECT:
                         __isBEGIN = False
-                        # self.__client.close()
             __isUIExist = self.ui.winfo_exists()
+        # except:
+        #     pass
 
     # a function to perform the communication function
     # between the client and the server
@@ -109,16 +122,15 @@ class clientSoc:
         try:
             __isRUN = True
             while __isRUN:
-                print("da chay")
-                # if self.receive() == self.__CONNEXISTED:
-                    # log in
+                # log in
                 if self.ui.layerFrames[login].isInLogInPage:
                     # self.send(self.__INLOGIN) ### SEND ###
                     if self.ui.layerFrames[login].isQuit:
-                        print("davo")
                         __isRUN = False
                         if self.receive() == self.__CONNEXISTED:
-                            self.send(self.__DISCONNECTED) ### SEND Quit ###
+                            self.send(self.__DISCONNECTED)  # SEND Quit ###
+                        else:
+                            __isRUN = False
                         # reset
                         self.ui.layerFrames[login].resetLogin()
                         # close socket
@@ -126,20 +138,22 @@ class clientSoc:
                         # swap status frame
                         self.ui.layerFrames[login].isInLogInPage = False
                         self.ui.layerFrames[connect].isInConnectPage = True
-                        return 1
+                        return self.__AGAINCONNECT
                     else:
                         if self.ui.layerFrames[login].isToSignUp:
                             self.ui.showUpPage(signup)
                             # reset
-                            self.ui.layerFrames[login].isToSignUp = False # reset isToSignUp because of one-click one send
+                            # reset isToSignUp because of one-click one send
+                            self.ui.layerFrames[login].isToSignUp = False
                             # swap status frame
                             self.ui.layerFrames[login].isInLogInPage = False
                             self.ui.layerFrames[signup].isInSignUpPage = True
                         else:
                             if self.ui.layerFrames[login].isLogin:
                                 if self.receive() == self.__CONNEXISTED:
-                                    self.send(self.__LOGIN) ### SEND Log in###
-                                self.ui.layerFrames[login].isLogin = False # reset isLogin because of one-click one send
+                                    self.send(self.__LOGIN)  # SEND Log in###
+                                # reset isLogin because of one-click one send
+                                self.ui.layerFrames[login].isLogin = False
                                 __ID = self.ui.layerFrames[login].data["username"]
                                 __PASSWORD = self.ui.layerFrames[login].data["password"]
                                 # reset
@@ -147,14 +161,14 @@ class clientSoc:
                                 self.ui.layerFrames[login].data["password"] = None
 
                                 if __ID and __PASSWORD:
-                                    self.send(__ID) ### SEND ###
-                                    self.send(__PASSWORD) ### SEND ###
+                                    self.send(__ID)  # SEND ###
+                                    self.send(__PASSWORD)  # SEND ###
                                     __AccountName = __ID
                                     # reset
                                     __ID = None
                                     __PASSWORD = None
 
-                                    __RESPOND = self.receive() #** RECV **#
+                                    __RESPOND = self.receive()  # ** RECV **#
                                     if __RESPOND == self.__LOGINSUCCESSFUL:
                                         self.ui.showUpPage(turnup)
                                         # reset login page
@@ -164,7 +178,8 @@ class clientSoc:
                                         self.ui.layerFrames[turnup].isInTurnUpPage = True
                                     if __RESPOND == self.__WRONGID or __RESPOND == self.__WRONGPASS:
                                         if not self.ui.layerFrames[login].isError:
-                                            self.ui.layerFrames[login].showWrongLogIn()
+                                            self.ui.layerFrames[login].showWrongLogIn(
+                                            )
 
                 # sign up
                 if self.ui.layerFrames[signup].isInSignUpPage:
@@ -180,50 +195,62 @@ class clientSoc:
                         # not isBackPage
                         if self.ui.layerFrames[signup].isSignUp:
                             if self.receive() == self.__CONNEXISTED:
-                                self.send(self.__SIGNUP) ### SEND Sign Up###
-                            self.ui.layerFrames[signup].isSignUp = False # reset isSignUp because of one-click one send
+                                self.send(self.__SIGNUP)  # SEND Sign Up###
+                            else:
+                                __isRUN = False
+                            # reset isSignUp because of one-click one send
+                            self.ui.layerFrames[signup].isSignUp = False
                             __NEWID = self.ui.layerFrames[signup].data["new username"]
                             __NEWPASS = self.ui.layerFrames[signup].data["new password"]
                             # reset
                             self.ui.layerFrames[signup].data["new username"] = None
                             self.ui.layerFrames[signup].data["new password"] = None
                             if __NEWID != None and __NEWPASS != None:
-                                self.send(__NEWID) ### SEND ###
-                                self.send(__NEWPASS) ### SEND ###
+                                self.send(__NEWID)  # SEND ###
+                                self.send(__NEWPASS)  # SEND ###
                                 # reset
                                 __NEWID = None
                                 __NEWPASS = None
 
-                                __RESPOND = self.receive() #** RECV **#
+                                __RESPOND = self.receive()  # ** RECV **#
                                 if __RESPOND == self.__SIGNUPSUCCESSFULL:
+                                    print(__RESPOND)
                                     self.ui.showUpPage(login)
+                                    # reset ui
+                                    self.ui.layerFrames[signup].resetSignUp()
                                     # swap ui frame
                                     self.ui.layerFrames[signup].isInSignUpPage = False
                                     self.ui.layerFrames[login].isInLogInPage = True
                                 elif __RESPOND == self.__IDEXISTED:
                                     if not self.ui.layerFrames[signup].isError:
-                                        self.ui.layerFrames[signup].showErrorSignUP()
+                                        self.ui.layerFrames[signup].showErrorSignUP(
+                                        )
 
                 # tracking (turn up)
                 if self.ui.layerFrames[turnup].isInTurnUpPage:
-                    # change account name 
+                    # change account name
                     if __AccountName:
                         self.ui.layerFrames[turnup].changeACN(__AccountName)
+                    # log out
                     if self.ui.layerFrames[turnup].isLogOut:
-                        self.ui.showUpPage(login)
+                        print("chay")
+                        # self.ui.showUpPage(login)
                         # reset
                         self.ui.layerFrames[turnup].changeACN("hcmusMMT2012")
                         self.ui.layerFrames[turnup].isLogOut = False
                         # swawp status frame
                         self.ui.layerFrames[turnup].isInTurnUpPage = False
                         self.ui.layerFrames[login].isInLogInPage = True
-                        return 2
+                        return self.__REFRESH
                     else:
                         # not isLogOut
                         if self.ui.layerFrames[turnup].isTurnUp:
                             if self.receive() == self.__CONNEXISTED:
-                                self.send(self.__TRACKING) ### SEND Tracking ###
-                            self.ui.layerFrames[turnup].isTurnUp = False # reset isTurnUp because of one-click one send
+                                self.send(self.__TRACKING)  # SEND Tracking ###
+                            else:
+                                __isRUN = False
+                            # reset isTurnUp because of one-click one send
+                            self.ui.layerFrames[turnup].isTurnUp = False
                             __VALUE = self.ui.layerFrames[turnup].data["value"]
                             __DATE = self.ui.layerFrames[turnup].data["date"]
                             # reset
@@ -231,14 +258,15 @@ class clientSoc:
                             self.ui.layerFrames[turnup].data["date"] = None
 
                             if __VALUE != None and __DATE != None:
-                                self.send(__VALUE) ### SEND ###
-                                self.send(__DATE) ### SEND ###
+                                self.send(__VALUE)  # SEND ###
+                                self.send(__DATE)  # SEND ###
                                 # reset
                                 __VALUE = None
                                 __DATE = None
-                                __RESPOND = self.receive() #** RECV **#
+                                __RESPOND = self.receive()  # ** RECV **#
                                 try:
-                                    self.ui.layerFrames[turnup].deleteItemTree()
+                                    self.ui.layerFrames[turnup].deleteItemTree(
+                                    )
                                     __itemValue = None
                                     __itemDate = None
                                     __itemTodayCases = None
@@ -246,21 +274,11 @@ class clientSoc:
                                         __itemDate = item[self.__DATEKEY]
                                         __itemValue = item[self.__VALUEKEY]
                                         __itemTodayCases = item[self.__TODAYCASESKEY]
-                                        self.ui.layerFrames[turnup].createItemTree(__itemValue, __itemDate, __itemTodayCases)
+                                        self.ui.layerFrames[turnup].createItemTree(
+                                            __itemValue, __itemDate, __itemTodayCases)
                                 except:
                                     continue
 
-                # else:
-                #     if not self.ui.isError:
-                #         self.ui.showError()
-                #     self.__client.close()
-                #     # reset all
-                #     self.ui.layerFrames[connect].isInConnectPage = False
-                #     self.ui.layerFrames[login].isInLogInPage = False
-                #     self.ui.layerFrames[signup].isSignUpPage = False
-                #     self.ui.layerFrames[turnup].isTurnUp = False
-                #     __isRUN = False
-                #     return 1
             if not __isRUN:
                 if not self.ui.isError:
                     self.ui.showError()
@@ -270,7 +288,7 @@ class clientSoc:
                 self.ui.layerFrames[login].isInLogInPage = False
                 self.ui.layerFrames[signup].isSignUpPage = False
                 self.ui.layerFrames[turnup].isTurnUp = False
-                return 1
+                return self.__AGAINCONNECT
 
         except:
             if not self.ui.isError:
@@ -281,8 +299,9 @@ class clientSoc:
             self.ui.layerFrames[login].isInLogInPage = False
             self.ui.layerFrames[signup].isSignUpPage = False
             self.ui.layerFrames[turnup].isTurnUp = False
-            return 1
-           
+            return self.__AGAINCONNECT
+
+
 def main():
     client = clientSoc()
     socThread = threading.Thread(target=client.run)
@@ -290,6 +309,7 @@ def main():
     socThread.start()
 
     client.ui.run()
+
 
 if __name__ == "__main__":
     main()
