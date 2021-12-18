@@ -1,52 +1,40 @@
 import socket
-import threading
+import json
 from tkinter.messagebox import NO
-import UI
-from connect import *
-from login import *
-from signup import *
-from turnup import *
 
 
-class clientSoc:
-    # socket value
+
+class clientSocket():
     __HEADER_SIZE = 64
-    __FORMAT = 'utf-8'
     __PORT = 54321
     __HOST = None
+    __FORMAT = 'utf-8'
 
-    # trigger command
-    __DISCONNECTED = "quit"
+    # triger command
     __LOGIN = "log in"
+    __LOGOUT = "log out"
     __SIGNUP = "sign up"
     __TRACKING = "tracking"
-    __LOGOUT = "log out"
-    __IDEXISTED = "ID existed"
-    __LOGINSUCCESSFUL = "login successful"
-    __WRONGPASS = "wrong password"
-    __WRONGID = "wrong id"
-    __SIGNUPSUCCESSFULL = "sign up success"
-
-    # data key
-    __VALUEKEY = "Country"
-    __DATEKEY = "Date"
-    __TODAYCASESKEY = "TodayCases"
+    __DISCONNECTED = "quit"
 
     # status
-    __CONNEXISTED = "open"
-    __CONNDEAD = "close"
-    __INLOGIN = "in Log In"
-    __INSIGNUP = "in Sign Up"
-    __INTURNUP = "in Turn Up"
-    __INCONNECT = "in Connect"
-    __AGAINCONNECT = 1
-    __REFRESH = 2
+    # connect
+    CONNECTING = "connecting status"
+    SERVEROFFLINE = "server offline"
+    ERRORCONNECT = "error connection"
+    DISCONNECTEDCONN = "disconnected"
+    # log in
+    LOGINSUCCESSFUL = "login successful"
+    WRONGPASS = "wrong password"
+    # sign up
+    SIGNUPSUCCESSFULL = "sign up success"
+    IDEXIST = "ID existed"
+    # tracking
 
     def __init__(self):
-        # declare UI obj
-        self.ui = UI.App()
         # declare socket
         self.__client = None
+        self.__RESULTS = None
 
     def send(self, msg):
         __message = msg.encode(self.__FORMAT)
@@ -66,249 +54,85 @@ class clientSoc:
             print(msg)
             return msg
 
-    def run(self):
-        # while the UI object is existing, a socket object will be inited, ran and
-        # closed until the UI object is dead
-        # try:
-        __isUIExist = True
-        while __isUIExist:
-            # init socket client TCP
-            self.__client = socket.socket(
-                socket.AF_INET, socket.SOCK_STREAM)
-            __isBEGIN = True
-            while __isBEGIN:
-                __isRUN = False
-                # waiting to get data from entry IP address and try to connect
-                # server if not connected, the error page will be displayed....
-                try:
-                    self.ui.showUpPage(connect)
-                    self.ui.layerFrames[connect].isInConnectPage = True
-                    self.__HOST = self.ui.layerFrames[connect].data["ip"]
-                    if self.__HOST:
-                        # reset a ip variable
-                        self.ui.layerFrames[connect].data["ip"] = None
-                        ADDRESS = (self.__HOST, self.__PORT)
-                        self.__client.connect(ADDRESS)
-                        __isRUN = True
-                        # check if the connection exists after it is accepted by the server
-                        if self.receive() != self.__CONNEXISTED:
-                            __isRUN = False
-                            if not self.ui.layerFrames[connect].isError:
-                                self.ui.layerFrames[connect].showErrConnection()
-                except:
-                    if not self.ui.layerFrames[connect].isError:
-                        self.ui.layerFrames[connect].showErrConnection()
-                    pass
-                # if connected, login page will be displayed.
-                # And the communication is done.
-                if __isRUN:
-                    while True:
-                        self.ui.showUpPage(login)
-                        self.ui.layerFrames[connect].isInConnectPage = False
-                        self.ui.layerFrames[login].isInLogInPage = True
-                        __STATUS = self.socket_client()
-                        if __STATUS == self.__AGAINCONNECT:
-                            break
-                    if __STATUS == self.__AGAINCONNECT:
-                        __isBEGIN = False
-            __isUIExist = self.ui.winfo_exists()
-        # except:
-        #     pass
-
-    # a function to perform the communication function
-    # between the client and the server
-    def socket_client(self):
+    def sendRequest(self, request, attachment_1, attachment_2, attachment_3):
         try:
-            __isRUN = True
-            while __isRUN:
-                # log in
-                if self.ui.layerFrames[login].isInLogInPage:
-                    # self.send(self.__INLOGIN) ### SEND ###
-                    if self.ui.layerFrames[login].isQuit:
-                        __isRUN = False
-                        if self.receive() == self.__CONNEXISTED:
-                            self.send(self.__DISCONNECTED)  # SEND Quit ###
-                        else:
-                            __isRUN = False
-                        # reset
-                        self.ui.layerFrames[login].resetLogin()
-                        # close socket
-                        self.__client.close()
-                        # swap status frame
-                        self.ui.layerFrames[login].isInLogInPage = False
-                        self.ui.layerFrames[connect].isInConnectPage = True
-                        return self.__AGAINCONNECT
-                    else:
-                        if self.ui.layerFrames[login].isToSignUp:
-                            self.ui.showUpPage(signup)
-                            # reset
-                            # reset isToSignUp because of one-click one send
-                            self.ui.layerFrames[login].isToSignUp = False
-                            # swap status frame
-                            self.ui.layerFrames[login].isInLogInPage = False
-                            self.ui.layerFrames[signup].isInSignUpPage = True
-                        else:
-                            if self.ui.layerFrames[login].isLogin:
-                                if self.receive() == self.__CONNEXISTED:
-                                    self.send(self.__LOGIN)  # SEND Log in###
-                                # reset isLogin because of one-click one send
-                                self.ui.layerFrames[login].isLogin = False
-                                __ID = self.ui.layerFrames[login].data["username"]
-                                __PASSWORD = self.ui.layerFrames[login].data["password"]
-                                # reset
-                                self.ui.layerFrames[login].data["username"] = None
-                                self.ui.layerFrames[login].data["password"] = None
-
-                                if __ID and __PASSWORD:
-                                    self.send(__ID)  # SEND ###
-                                    self.send(__PASSWORD)  # SEND ###
-                                    __AccountName = __ID
-                                    # reset
-                                    __ID = None
-                                    __PASSWORD = None
-
-                                    __RESPOND = self.receive()  # ** RECV **#
-                                    if __RESPOND == self.__LOGINSUCCESSFUL:
-                                        self.ui.showUpPage(turnup)
-                                        # reset login page
-                                        self.ui.layerFrames[login].resetLogin()
-                                        # swap status frame
-                                        self.ui.layerFrames[login].isInLogInPage = False
-                                        self.ui.layerFrames[turnup].isInTurnUpPage = True
-                                    if __RESPOND == self.__WRONGID or __RESPOND == self.__WRONGPASS:
-                                        if not self.ui.layerFrames[login].isError:
-                                            self.ui.layerFrames[login].showWrongLogIn(
-                                            )
-
-                # sign up
-                if self.ui.layerFrames[signup].isInSignUpPage:
-                    # self.send(self.__INSIGNUP) ### SEND ###
-                    if self.ui.layerFrames[signup].isBackPage:
-                        self.ui.showUpPage(login)
-                        # reset
-                        self.ui.layerFrames[signup].isBackPage = False
-                        # swap status frame
-                        self.ui.layerFrames[signup].isInSignUpPage = False
-                        self.ui.layerFrames[login].isInLogInPage = True
-                    else:
-                        # not isBackPage
-                        if self.ui.layerFrames[signup].isSignUp:
-                            if self.receive() == self.__CONNEXISTED:
-                                self.send(self.__SIGNUP)  # SEND Sign Up###
-                            else:
-                                __isRUN = False
-                            # reset isSignUp because of one-click one send
-                            self.ui.layerFrames[signup].isSignUp = False
-                            __NEWID = self.ui.layerFrames[signup].data["new username"]
-                            __NEWPASS = self.ui.layerFrames[signup].data["new password"]
-                            # reset
-                            self.ui.layerFrames[signup].data["new username"] = None
-                            self.ui.layerFrames[signup].data["new password"] = None
-                            if __NEWID != None and __NEWPASS != None:
-                                self.send(__NEWID)  # SEND ###
-                                self.send(__NEWPASS)  # SEND ###
-                                # reset
-                                __NEWID = None
-                                __NEWPASS = None
-
-                                __RESPOND = self.receive()  # ** RECV **#
-                                if __RESPOND == self.__SIGNUPSUCCESSFULL:
-                                    print(__RESPOND)
-                                    self.ui.showUpPage(login)
-                                    # reset ui
-                                    self.ui.layerFrames[signup].resetSignUp()
-                                    # swap ui frame
-                                    self.ui.layerFrames[signup].isInSignUpPage = False
-                                    self.ui.layerFrames[login].isInLogInPage = True
-                                elif __RESPOND == self.__IDEXISTED:
-                                    if not self.ui.layerFrames[signup].isError:
-                                        self.ui.layerFrames[signup].showErrorSignUP(
-                                        )
-
-                # tracking (turn up)
-                if self.ui.layerFrames[turnup].isInTurnUpPage:
-                    # change account name
-                    if __AccountName:
-                        self.ui.layerFrames[turnup].changeACN(__AccountName)
-                    # log out
-                    if self.ui.layerFrames[turnup].isLogOut:
-                        print("chay")
-                        # self.ui.showUpPage(login)
-                        # reset
-                        self.ui.layerFrames[turnup].changeACN("hcmusMMT2012")
-                        self.ui.layerFrames[turnup].isLogOut = False
-                        # swawp status frame
-                        self.ui.layerFrames[turnup].isInTurnUpPage = False
-                        self.ui.layerFrames[login].isInLogInPage = True
-                        return self.__REFRESH
-                    else:
-                        # not isLogOut
-                        if self.ui.layerFrames[turnup].isTurnUp:
-                            if self.receive() == self.__CONNEXISTED:
-                                self.send(self.__TRACKING)  # SEND Tracking ###
-                            else:
-                                __isRUN = False
-                            # reset isTurnUp because of one-click one send
-                            self.ui.layerFrames[turnup].isTurnUp = False
-                            __VALUE = self.ui.layerFrames[turnup].data["value"]
-                            __DATE = self.ui.layerFrames[turnup].data["date"]
-                            # reset
-                            self.ui.layerFrames[turnup].data["value"] = None
-                            self.ui.layerFrames[turnup].data["date"] = None
-
-                            if __VALUE != None and __DATE != None:
-                                self.send(__VALUE)  # SEND ###
-                                self.send(__DATE)  # SEND ###
-                                # reset
-                                __VALUE = None
-                                __DATE = None
-                                __RESPOND = self.receive()  # ** RECV **#
-                                try:
-                                    self.ui.layerFrames[turnup].deleteItemTree(
-                                    )
-                                    __itemValue = None
-                                    __itemDate = None
-                                    __itemTodayCases = None
-                                    for item in __RESPOND:
-                                        __itemDate = item[self.__DATEKEY]
-                                        __itemValue = item[self.__VALUEKEY]
-                                        __itemTodayCases = item[self.__TODAYCASESKEY]
-                                        self.ui.layerFrames[turnup].createItemTree(
-                                            __itemValue, __itemDate, __itemTodayCases)
-                                except:
-                                    continue
-
-            if not __isRUN:
-                if not self.ui.isError:
-                    self.ui.showError()
-                self.__client.close()
-                # reset all
-                self.ui.layerFrames[connect].isInConnectPage = False
-                self.ui.layerFrames[login].isInLogInPage = False
-                self.ui.layerFrames[signup].isSignUpPage = False
-                self.ui.layerFrames[turnup].isTurnUp = False
-                return self.__AGAINCONNECT
-
+                # request bao gồm "log in" "log out" "sign up" "tracking"
+            if self.receive() == "open":
+                self.send(request)
+                if request == self.__LOGIN:
+                    self.send(attachment_1) #ID
+                    self.send(attachment_2) #PASS
+                    __result = self.receive()
+                    print(__result)
+                    if __result == self.LOGINSUCCESSFUL:
+                        return self.LOGINSUCCESSFUL
+                    elif __result == self.WRONGPASS:
+                        return self.WRONGPASS
+                if request == self.__SIGNUP:
+                    # if (attachment_2 == attachment_3):
+                    self.send(attachment_1) # ID
+                    self.send(attachment_2) # PASS
+                    __result = self.receive()
+                    print(__result)
+                    if __result == self.SIGNUPSUCCESSFULL:
+                        return self.SIGNUPSUCCESSFULL
+                    elif __result == self.IDEXIST:
+                        return self.IDEXIST
+                if request == self.__LOGOUT:
+                    self.send(self.__LOGOUT)
+                    print(self.receive())
+                if request == self.__TRACKING:
+                    self.send(attachment_1) #place
+                    self.send(attachment_2) #date
+                    self.__RESULTS = json.loads(self.receive())
+                    return self.__RESULTS
+                if request == self.__DISCONNECTED: # này nếu muốn thì tạo 1 nút ngắt kết nối với server
+                    self.send(self.__DISCONNECTED)
+                    self.__client.close()
+                    return self.DISCONNECTEDCONN
+            else:
+                print("server offline")
+                return self.SERVEROFFLINE
         except:
-            if not self.ui.isError:
-                self.ui.showError()
-            self.__client.close()
-            # reset all
-            self.ui.layerFrames[connect].isInConnectPage = False
-            self.ui.layerFrames[login].isInLogInPage = False
-            self.ui.layerFrames[signup].isSignUpPage = False
-            self.ui.layerFrames[turnup].isTurnUp = False
-            return self.__AGAINCONNECT
+            print("server crash")
+            return self.ERRORCONNECT
 
+    def start(self, ip):
+        self.__HOST = ip
+        self.__client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        __ADDRESS = (self.__HOST, self.__PORT)
+        print(__ADDRESS)
+        try:
+            self.__client.connect(__ADDRESS)
+            if self.receive() == "open":
+                __RUN = True
+                print("chay")
+                return self.CONNECTING
+            else:
+                print("server is offline")
+                self.__client.close()
+                return self.SERVEROFFLINE
+        except:
+            print("wrong HOST IP")
+            return self.ERRORCONNECT
 
-def main():
-    client = clientSoc()
-    socThread = threading.Thread(target=client.run)
-    socThread.daemon = True
-    socThread.start()
+    def CASES_results(self):
+        return self.__RESULTS
 
-    client.ui.run()
+   
+# test = clientSocket()
+# if test.start("127.0.0.1"):
+#     print("connect successful")
+# if (test.send_request("log in", "luat", "pro", " ")):
+#     print("continue")
+# if (test.send_request("tracking", "TP. Hồ Chí Minh", "17/12/2021", " ")):
+#     print (f"Số ca hôm nay của TP. Hồ Chí Minh là: {test.CASES_return()}")
 
+# if (test.send_request("quit", "luat", "pro", " ")):
+#     print("quit")
 
-if __name__ == "__main__":
-    main()
+# if test.start("127.0.0.1"):
+#     print("connect successful")
+
+# if (test.send_request("tracking", "Đà Nẵng", "17/12/2021", " ")):
+#     print (f"Số ca hôm nay của Đà Nẵng là: {test.CASES_return()}")

@@ -5,9 +5,13 @@ from connect import *
 from login import *
 from signup import *
 from turnup import *
-
+from clientSoc import *
 
 class App(tk.Tk):
+    # client Socket
+    clientSock = clientSocket()
+
+    # UI constant
     __BGCOLOR = "#ffffff"
     __TITLE = "SkyCov Client"
     __FAVICON = r"./img/favicon.ico"
@@ -18,14 +22,17 @@ class App(tk.Tk):
     __BUTTONBGCOLOR_AC = "#5c5e6b"
     __BUTTONFGCOLOR_AC = "#ffffff"
     __BUTTONFONT = "roboto 11 bold"
-
     isError = False
 
+    # name page
+    CONNECTPAGE = "connect"
+    LOGINPAGE = "log in"
+    SIGNUPPAGE = "sign up"
+    TURNUPPAGE = "turn up"
     def __init__(self):
         tk.Tk.__init__(self)
         self.initUI()
-        self.showUpPage(login)
-    
+
     def run(self):
         self.mainloop()
 
@@ -45,14 +52,23 @@ class App(tk.Tk):
 
         self.layerFrames = {}
         for fr in (connect, login, signup, turnup):
-            frame = fr(self.__screen)
+            frame = fr(self.__screen, self.clientSock, self)
             frame.grid(row = 0, column = 0, sticky = "nsew")
             self.layerFrames[fr] = frame
 
         self.layerFrames[connect].primaryFrame.tkraise()
 
-    def showUpPage(self, frameClass):
-        self.layerFrames[frameClass].primaryFrame.tkraise()
+    def showUpPage(self, framePage):
+        if framePage == self.CONNECTPAGE: 
+            self.layerFrames[connect].primaryFrame.tkraise()
+        elif framePage == self.LOGINPAGE:
+            self.layerFrames[login].primaryFrame.tkraise()
+        elif framePage == self.SIGNUPPAGE:
+            self.layerFrames[signup].primaryFrame.tkraise()
+        elif framePage == self.TURNUPPAGE:
+            self.layerFrames[turnup].primaryFrame.tkraise()
+
+        
 
     def showError(self):
         __ErrorPageBGCOLOR = "#f0f0f0"
@@ -97,15 +113,12 @@ class App(tk.Tk):
         self.isError = True
         windows.destroy()
 
-# def main():
-#     u = App()
-#     u.showUpPage(turnup)
-#     u.layerFrames[turnup].createItemTree("TP. Hồ Chí Minh", "11/12/2021", "1111")
-#     # print(u.layerFrames[connect].data)
-#     # u.layerFrames[connect].showErrConnection()
-#     # u.layerFrames[signup].showErrorSignUP()
-#     # u.showError()
+    def changeAccountName(self, name):
+        self.layerFrames[turnup].changeACN(name)
 
-#     u.run()
-# if __name__ == "__main__":
-#     main()
+def main():
+    ui = App()
+    ui.run()
+
+if __name__ == "__main__":
+    main()

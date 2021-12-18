@@ -5,6 +5,10 @@ from PIL import Image, ImageTk
 from entry import *
 from tkinter import messagebox
 from UI import *
+from connect import *
+from signup import *
+from turnup import *
+
 class login(tk.Frame):
     __HEIGHT = 360
     __WIDTH = 640
@@ -24,7 +28,7 @@ class login(tk.Frame):
     isQuit = False
     isInLogInPage = False
     isError = False
-    def __init__(self, parent):
+    def __init__(self, parent, socket, mainUI):
         tk.Frame.__init__(self, parent)
         self.primaryFrame = tk.Frame(parent, bg=self.__BGCOLOR)
         self.primaryFrame.place(height=self.__HEIGHT, width=self.__WIDTH, x = 0, y = 0)
@@ -68,7 +72,7 @@ class login(tk.Frame):
         __signupButton.bind("<Leave>", func=lambda e: __signupButton.config(
             background=self.__BUTTONBGCOLOR))
         # to Sign Up page
-        __signupButton.bind("<Button-1>", func=lambda e: self.toSignUp())
+        __signupButton.bind("<Button-1>", func=lambda e: self.toSignUp(mainUI))
 
         # log in
         __loginButton = tk.Button(__wrapper, text = "Log in", 
@@ -83,7 +87,7 @@ class login(tk.Frame):
         __loginButton.bind("<Leave>", func=lambda e: __loginButton.config(
             background=self.__BUTTONBGCOLOR, cursor="hand2"))
         # get and send data to log in
-        __loginButton.bind("<Button-1>", func=lambda e: self.readAndSend())
+        __loginButton.bind("<Button-1>", func=lambda e: self.readAndSend(socket, mainUI))
 
         # quit
         __quitButton = tk.Button(self.primaryFrame, text = "Quit", 
@@ -97,23 +101,35 @@ class login(tk.Frame):
         # background color on leving widget
         __quitButton.bind("<Leave>", func=lambda e: __quitButton.config(
             background=self.__BUTTONBGCOLOR, cursor="hand2"))
-        # get and send data to log in
-        __quitButton.bind("<Button-1>", func=lambda e: self.toQuit())
+        # to quit connect
+        __quitButton.bind("<Button-1>", func=lambda e: self.toQuit(socket, mainUI))
 
     #read data from entry
-    def readAndSend(self):
+    def readAndSend(self, socket, mainUI):
         if (self.__usInput.get() != "Username" and self.__passInput.get() != "Password") or (
             self.__usInput.get() != "" and self.__passInput.get() != ""):
             self.isLogin = True
             self.data["username"] = str(self.__usInput.get())
             self.data["password"] = str(self.__passInput.get())
+            __login = socket.sendRequest("log in", self.data["username"], self.data["password"], "")
+            if __login == socket.LOGINSUCCESSFUL:
+                mainUI.showUpPage(mainUI.TURNUPPAGE)
+                mainUI.changeAccountName(self.data["username"])
+            elif __login == socket.WRONGPASS:
+                self.showWrongLogIn()
+            elif __login == socket.SERVEROFFLINE or __login == socket.ERRORCONNECT:
+                mainUI.showError()
+                self.resetLogin()
+                mainUI.showUpPage(mainUI.CONNECTPAGE)
+
         else:
             self.showErrSyntaxLogIn()
     
-    def toSignUp(self):
-        self.isToSignUp = True
+    def toSignUp(self, mainUI):
+        self.resetLogin()
+        mainUI.showUpPage(mainUI.SIGNUPPAGE)
 
-    def toQuit(self):
+    def toQuit(self, socket, mainUI):
         __WarningPageBGCOLOR = "#f0f0f0"
         __LabelContentFGCOLOR = "#494b59"
         __LabelErrorFGCOLOR = "#d46600"
@@ -147,7 +163,7 @@ class login(tk.Frame):
         __yesButton.bind("<Leave>", func=lambda e: __yesButton.config(
         background=self.__BUTTONBGCOLOR, cursor="hand2"))
         #close warning
-        __yesButton.bind("<Button-1>", func=lambda e: self.QuitConfirm(__warning))
+        __yesButton.bind("<Button-1>", func=lambda e: self.QuitConfirm(__warning, socket, mainUI))
 
         # No button
         __noButton = tk.Button(__warning, text = "No", 
@@ -164,8 +180,11 @@ class login(tk.Frame):
         #close warning
         __noButton.bind("<Button-1>", func=lambda e: __warning.destroy())
 
-    def QuitConfirm(self, windows):
+    def QuitConfirm(self, windows, socket, mainUI):
         self.isQuit = True
+        socket.sendRequest("quit", "", "", "")
+        self.resetLogin()
+        mainUI.showUpPage(mainUI.CONNECTPAGE)
         windows.destroy()
 
     def showErrSyntaxLogIn(self):
@@ -250,8 +269,6 @@ class login(tk.Frame):
     def resetLogin(self):
         self.data["username"] = None
         self.data["password"] = None
-        self.isQuit = False
-        self.isLogin = False
         self.__usInput.clear()
         self.__passInput.clear()
 

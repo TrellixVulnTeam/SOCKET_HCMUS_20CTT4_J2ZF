@@ -1,3 +1,4 @@
+import threading
 import os
 import tkinter as tk
 from tkinter import Button, ttk
@@ -5,6 +6,8 @@ from PIL import Image, ImageTk
 from entry import *
 from tkinter import messagebox
 from UI import *
+from login import *
+
 class connect(tk.Frame):
     __HEIGHT = 360
     __WIDTH = 640
@@ -18,11 +21,11 @@ class connect(tk.Frame):
     __FGENTRY = "#f5f5f5"
     __WRAPCOLOR = "#f0f0f0"
     __ERRORFLOATINGCOLOR = "#0b0d1a"
-    data =  {"ip": None}
+    __data =  {"ip": None}
     isError = False
     isInConnectPage = False
 
-    def __init__(self, parent):
+    def __init__(self, parent, socket, mainUI):
         tk.Frame.__init__(self, parent)
         self.primaryFrame = tk.Frame(parent, bg=self.__BGCOLOR)
         self.primaryFrame.place(height=self.__HEIGHT, width=self.__WIDTH, x = 0, y = 0)
@@ -52,17 +55,23 @@ class connect(tk.Frame):
         background=self.__BUTTONBGCOLOR_AC, cursor="hand2"))
         __connectButton.bind("<Leave>", func=lambda e: __connectButton.config(
         background=self.__BUTTONBGCOLOR))
-        # clicked to send data
-        __connectButton.bind("<Button-1>", func=lambda e: self.readAndSend())
+        # clicked to send __data
+        # __connectButton.bind("<Button-1>", func=lambda e: self.readAndSend())
+        __connectButton.bind("<Button-1>", func=lambda e: self.readAndConnect(socket, mainUI))
     
-    #read data from entry
-    def readAndSend(self):
-        if self.__ipInput.get() != "IP address":
-            self.data["ip"] = str(self.__ipInput.get())
-    
+    #read __data from entry
+    def readAndConnect(self, socket, mainUI):
+        if self.__ipInput.get() != "IP address" and self.__ipInput.get() != "":
+            self.__data["ip"] = str(self.__ipInput.get())
+            __connect = socket.start(self.__data["ip"])
+            if __connect == socket.CONNECTING:
+                mainUI.showUpPage(mainUI.LOGINPAGE)
+            elif __connect == socket.ERRORCONNECT:
+                self.showErrConnection()
+            elif __connect == socket.SERVEROFFLINE:
+                mainUI.showError()
+        
     def showErrConnection(self):
-        # change isError
-        self.isError = True
         # show UI error
         __ErrorPageBGCOLOR = "#f0f0f0"
         __LabelContentFGCOLOR = "#494b59"
@@ -105,12 +114,10 @@ class connect(tk.Frame):
         self.__errWindows.protocol("WM_DELETE_WINDOW", self.closePop)
 
     def tryAgain(self, windows):
-        self.isError = False
-        self.data["ip"] = None
+        self.__data["ip"] = None
         self.__ipInput.delete('0', 'end')
         windows.destroy()
     
     def closePop(self):
-        self.isError = False
-        self.data["ip"] = None
+        self.__data["ip"] = None
         self.__errWindows.destroy()

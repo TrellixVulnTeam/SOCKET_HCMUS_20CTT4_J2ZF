@@ -1,6 +1,7 @@
 import tkinter as tk
 from tkinter import ttk
 import time
+from datetime import datetime
 import calendar
 class EntryWithPlaceholder(tk.Entry):
     def __init__(self, master=None, placeholder="PLACEHOLDER", color='grey', password = "no"):
@@ -230,7 +231,7 @@ class EntryWithPickerDay(tk.Entry):
         month = self.monthNames.index(self.monthStr.get())
         date = clickedButton['text']
 
-        self.full_date = self.formatStr % (date, month, year)
+        self.full_date = self.cleanTime(self.formatStr % (date, month, year))
         self['fg'] = self.default_fg_color
         self.delete('0', 'end')
         self.insert(0, self.full_date)
@@ -241,3 +242,7 @@ class EntryWithPickerDay(tk.Entry):
             self.widget.insert(0, self.full_date)
         except AttributeError:
             pass
+    def cleanTime(self, dateStr):
+        __format = "%d/%m/%Y"
+        __dtObj = datetime.strptime(dateStr, __format) 
+        return __dtObj.strftime(__format)

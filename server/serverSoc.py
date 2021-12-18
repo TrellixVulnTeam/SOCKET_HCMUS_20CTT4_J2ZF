@@ -1,5 +1,6 @@
 import socket
 import threading
+import json
 import UI
 import crawl
 from userData import *
@@ -182,18 +183,30 @@ class serverSoc:
 
                 if __REQUEST == self.__TRACKING:
                     # receive value (name)
-                    msg = self.receive(conn)
-                    if msg == "NULL":
+                    province = self.receive(conn)
+                    if province == "NULL":
                         self.ui.creatItemClient(
                             addr[0], addr[1], self.__ERRORCONNECTIONSTATUS)
                         self.__CLIENTS.remove((conn, addr))
                         __ISRUN = False
                         break
-                    data = str(self.crData.query(msg))
-                    self.send(conn, data)
-                    # receive date
                     date = self.receive(conn)
-                    self.send(date)
+                    if date == "NULL":
+                        self.ui.creatItemClient(
+                            addr[0], addr[1], self.__ERRORCONNECTIONSTATUS)
+                        self.__CLIENTS.remove((conn, addr))
+                        __ISRUN = False
+                        break
+                    data = str(self.crData.query(province, date))
+                    print(data)
+                    # self.send(conn, data)
+                    # receive date
+                    # result
+                    if data:
+                        result = [{'resultAdrress': province, 'resultTodayCases': data}]
+                    else:
+                        result = [{'resultAdrress': province, 'resultTodayCases': "NaN"}]
+                    self.send(conn, json.dumps(result))
                     
             conn.close()
         except:

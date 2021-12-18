@@ -6,12 +6,11 @@ import requests
 import json
 import time
 import os
-from datetime import datetime
 class crawlDataCov:
     def __init__(self) -> None:
         #source data from 
         self.__url = "https://vnexpress.net/microservice/sheet/type/covid19_2021_281"
-        self.__pathToDataCov = "./database/dataCov.json"
+        self.__pathToDataCov = "./dataCov.json"
   
     def run(self):
         # print(self.crawlData())
@@ -43,7 +42,6 @@ class crawlDataCov:
             __dataOf = __dataOfDate.split(',')
             __listDataAddress = {}
             __date = __dataOf[0].replace('\"','') + "/2021"
-            __date = self.cleanTime(__date)
             __dataOf.pop(0)
             __dataOf.pop()
             # get data of 63 address
@@ -54,11 +52,6 @@ class crawlDataCov:
                     __listDataAddress[__headerName[count].replace('\"','')] = int(__dataOf[count].replace('\"',''))
             __dataCov[__date] = __listDataAddress
         return __dataCov
-
-    def cleanTime(self, dateStr):
-        __format = "%d/%m/%Y"
-        __dtObj = datetime.strptime(dateStr, __format) 
-        return __dtObj.strftime(__format)
 
     def writeToLocal(self, data):
         if not os.path.exists(self.__pathToDataCov):
@@ -75,14 +68,14 @@ class crawlDataCov:
     
     
 
-# def main():
-#     cov = crawlDataCov()
-#     # cov.run()
-#     # str = "TP. Hồ Chí Minh"
-#     # print(a)
-#     cov.run()
-#     a = cov.query("Quảng Ngãi", "15/12/2021")
-#     print(a)
+def main():
+    cov = crawlDataCov()
+    # cov.run()
+    # str = "TP. Hồ Chí Minh"
+    # print(a)
+    cov.run()
+    a = cov.query("Quảng Ngãi", "15/12/2021")
+    print(a)
 
-# if __name__ == "__main__":
-#     main()
+if __name__ == "__main__":
+    main()

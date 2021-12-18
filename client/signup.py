@@ -5,6 +5,8 @@ from PIL import Image, ImageTk
 from entry import *
 from tkinter import messagebox
 from UI import *
+from login import *
+
 class signup(tk.Frame):
     __HEIGHT = 360
     __WIDTH = 640
@@ -23,7 +25,7 @@ class signup(tk.Frame):
     isSignUp = False
     isInSignUpPage = False
     isError = False
-    def __init__(self, parent):
+    def __init__(self, parent, socket, mainUI):
         tk.Frame.__init__(self, parent)
         self.primaryFrame = tk.Frame(parent, bg=self.__BGCOLOR)
         self.primaryFrame.place(height=self.__HEIGHT, width=self.__WIDTH, x = 0, y = 0)
@@ -70,7 +72,7 @@ class signup(tk.Frame):
         __backButton.bind("<Leave>", func=lambda e: __backButton.config(
         background=self.__BUTTONBGCOLOR))
         # to back page
-        __backButton.bind("<Button-1>", func=lambda e: self.toBack())
+        __backButton.bind("<Button-1>", func=lambda e: self.toBack(mainUI))
         
         # sign up
         __signupButton = tk.Button(__wrapper, text = "Sign Up", 
@@ -85,21 +87,27 @@ class signup(tk.Frame):
         __signupButton.bind("<Leave>", func=lambda e: __signupButton.config(
             background=self.__BUTTONBGCOLOR, cursor="hand2"))
         # read and send data to sign up
-        __signupButton.bind("<Button-1>", func=lambda e: self.readAndSend())
+        __signupButton.bind("<Button-1>", func=lambda e: self.readAndSend(socket, mainUI))
 
-    def readAndSend(self):
+    def readAndSend(self, socket, mainUI):
         if (self.__newusInput.get() != "New Username") and (
             self.__newpassInput.get() != "New Password") and (
             self.__confirmPassInput.get() != "Confirm password"):
             if self.__newpassInput.get() != self.__confirmPassInput.get():
                 self.__showWarning()
             else:
-                self.isSignUp = True
                 self.data["new username"] = str(self.__newusInput.get())
                 self.data["new password"] = str(self.__newpassInput.get())
+                __signup = socket.sendRequest("sign up", self.data["new username"], self.data["new password"], "")
+                if __signup == socket.SIGNUPSUCCESSFULL:
+                    mainUI.showUpPage(mainUI.LOGINPAGE)
+                elif __signup == socket.IDEXIST:
+                    self.showErrorSignUP()
+                elif __signup == socket.SERVEROFFLINE or __signup == socket.ERRORCONNECT:
+                    mainUI.showError()
 
-    def toBack(self):
-        self.isBackPage = True
+    def toBack(self, mainUI):
+        mainUI.showUpPage(mainUI.LOGINPAGE)
 
     def __showWarning(self):
         __WarningPageBGCOLOR = "#f0f0f0"
@@ -182,8 +190,6 @@ class signup(tk.Frame):
         windows.destroy()
 
     def resetSignUp(self):
-        self.isQuit = False
-        self.isLogin = False
         self.__newusInput.clear()
         self.__newpassInput.clear()
         self.__confirmPassInput.clear()

@@ -5,6 +5,8 @@ from PIL import Image, ImageTk
 from entry import *
 from tkinter import messagebox
 from UI import *
+from login import *
+
 class turnup(tk.Frame):
     __HEIGHT = 360
     __WIDTH = 640
@@ -24,7 +26,7 @@ class turnup(tk.Frame):
     isTurnUp = False
     isInTurnUpPage = False
 
-    def __init__(self, parent):
+    def __init__(self, parent, socket, mainUI):
         tk.Frame.__init__(self, parent)
         self.primaryFrame = tk.Frame(parent, bg=self.__BGCOLOR)
         self.primaryFrame.place(height=self.__HEIGHT, width=self.__WIDTH, x = 0, y = 0)
@@ -66,7 +68,7 @@ class turnup(tk.Frame):
             background=self.__BUTTONBGCOLOR, foreground=self.__BUTTONFGCOLOR, 
             cursor="hand2"))
         # log out clicked
-        __logoutButton.bind("<Button-1>", func=lambda e: self.toLogOut())
+        __logoutButton.bind("<Button-1>", func=lambda e: self.toLogOut(mainUI))
         # name page
         __labelName = tk.Label(__wrapper, text="TURN UP", 
         bg = self.__WRAPCOLOR, fg=self.__NAMEPAGECOLOR, font = "roboto 20 normal")
@@ -98,24 +100,22 @@ class turnup(tk.Frame):
                 cursor="hand2"
             ))
         # read and send data to search
-        __searchButton.bind("<Button-1>", func=lambda e: self.readAndSend())
+        __searchButton.bind("<Button-1>", func=lambda e: self.readAndSend(socket, mainUI))
 
         # resultwrapper
         __resultWrapp = tk.Frame(__wrapper, bg = self.__WRAPCOLOR)
         __resultWrapp.place(x = 14, y = 139, width=274, height=171)
         # define column
-        columns = ('No','Result', 'Date', 'Cases_Today')
+        columns = ('No','Result', 'Cases_Today')
         self.__treeClients = ttk.Treeview(__resultWrapp, columns=columns, show='headings')
         # define headings
         self.__treeClients.heading('No', text='No')
         self.__treeClients.heading('Result', text='Result')
-        self.__treeClients.heading('Date', text='Date')
         self.__treeClients.heading('Cases_Today', text='Cases')
         self.__treeClients.grid(row=0, column=0, sticky='nsew')
         # define column size
         self.__treeClients.column('No', width=27, anchor=tk.CENTER)
-        self.__treeClients.column('Result', width=80, anchor=tk.CENTER)
-        self.__treeClients.column('Date', width=72, anchor=tk.CENTER)
+        self.__treeClients.column('Result', width=152, anchor=tk.CENTER)
         self.__treeClients.column('Cases_Today', width=69, anchor=tk.CENTER)
         # scrollbar
         __scrollbar = ttk.Scrollbar(__resultWrapp, orient=tk.VERTICAL, command=self.__treeClients.yview)
@@ -125,9 +125,9 @@ class turnup(tk.Frame):
         # serial
         self.serial = 0
 
-    def createItemTree(self, result, date, cases):
+    def createItemTree(self, result, cases):
         self.serial = self.serial + 1
-        __item = (self.serial, result, date, cases)
+        __item = (self.serial, result, cases)
         self.__treeClients.insert('', tk.END, values=__item)
     
     def deleteItemTree(self):
@@ -135,14 +135,24 @@ class turnup(tk.Frame):
         for clientItem in self.__treeClients.get_children():
             self.__treeClients.delete(clientItem)
 
-    def readAndSend(self):
+    def showResult(self, data):
+        self.deleteItemTree()
+        for __item in data:
+            self.createItemTree(__item['resultAdrress'], __item['resultTodayCases'])
+
+    def readAndSend(self, socket, mainUI):
         if (self.__queryInput.get() != "New Username") and (
             self.__dateInput.get() != "dd/mm/yyyy"):
             self.isTurnUp = True
             self.data["value"] = str(self.__queryInput.get())
             self.data["date"] = str(self.__dateInput.get())
+            __result = socket.sendRequest("tracking", self.data["value"], self.data["date"], " ")
+            if __result == socket.SERVEROFFLINE or __result == socket.ERRORCONNECT:
+                mainUI.showError()
+            elif __result:
+                self.showResult(__result)
 
-    def toLogOut(self):
+    def toLogOut(self, mainUI):
         __WarningPageBGCOLOR = "#f0f0f0"
         __LabelContentFGCOLOR = "#494b59"
         __LabelErrorFGCOLOR = "#d46600"
@@ -176,7 +186,7 @@ class turnup(tk.Frame):
         __yesButton.bind("<Leave>", func=lambda e: __yesButton.config(
         background=self.__BUTTONBGCOLOR, cursor="hand2"))
         #close warning
-        __yesButton.bind("<Button-1>", func=lambda e: self.toBackLogIn(__warning))
+        __yesButton.bind("<Button-1>", func=lambda e: self.toBackLogIn(__warning, mainUI))
 
         # No button
         __noButton = tk.Button(__warning, text = "No", 
@@ -193,8 +203,9 @@ class turnup(tk.Frame):
         #close warning
         __noButton.bind("<Button-1>", func=lambda e: __warning.destroy())
 
-    def toBackLogIn(self, windows):
+    def toBackLogIn(self, windows, mainUI):
         self.isLogOut = True
+        mainUI.showUpPage(mainUI.LOGINPAGE)
         windows.destroy()
 
     def changeACN(self, name):
