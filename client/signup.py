@@ -100,6 +100,7 @@ class signup(tk.Frame):
                 self.data["new password"] = str(self.__newpassInput.get())
                 __signup = socket.sendRequest("sign up", self.data["new username"], self.data["new password"], "")
                 if __signup == socket.SIGNUPSUCCESSFULL:
+                    self.resetSignUp()
                     mainUI.showUpPage(mainUI.LOGINPAGE)
                 elif __signup == socket.IDEXIST:
                     self.showErrorSignUP()
@@ -107,6 +108,7 @@ class signup(tk.Frame):
                     mainUI.showError()
 
     def toBack(self, mainUI):
+        self.resetSignUp()
         mainUI.showUpPage(mainUI.LOGINPAGE)
 
     def __showWarning(self):
@@ -193,4 +195,9 @@ class signup(tk.Frame):
         self.__newusInput.clear()
         self.__newpassInput.clear()
         self.__confirmPassInput.clear()
+
+        self.data["new username"] = None
+        self.data["new password"] = None
+
+        self.focus_set()
         

@@ -147,8 +147,14 @@ class turnup(tk.Frame):
             self.data["value"] = str(self.__queryInput.get())
             self.data["date"] = str(self.__dateInput.get())
             __result = socket.sendRequest("tracking", self.data["value"], self.data["date"], " ")
+            self.__dateInput.clear()
+            self.__queryInput.clear()
+            self.data["value"] = None
+            self.data["date"] = None
             if __result == socket.SERVEROFFLINE or __result == socket.ERRORCONNECT:
                 mainUI.showError()
+                self.resetTurnUpPage()
+                mainUI.showUpPage(mainUI.CONNECTPAGE)
             elif __result:
                 self.showResult(__result)
 
@@ -204,9 +210,18 @@ class turnup(tk.Frame):
         __noButton.bind("<Button-1>", func=lambda e: __warning.destroy())
 
     def toBackLogIn(self, windows, mainUI):
-        self.isLogOut = True
+        self.resetTurnUpPage()
         mainUI.showUpPage(mainUI.LOGINPAGE)
         windows.destroy()
 
     def changeACN(self, name):
         self.__labelUsername["text"] = name
+
+    def resetTurnUpPage(self):
+        self.data["value"] = None
+        self.data["date"] = None
+        self.deleteItemTree()
+        self.__dateInput.clear()
+        self.__queryInput.clear()
+        self.changeACN("hcmusMMT2012")
+        self.focus_set()

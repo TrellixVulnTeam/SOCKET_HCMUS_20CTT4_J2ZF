@@ -66,6 +66,7 @@ class connect(tk.Frame):
             __connect = socket.start(self.__data["ip"])
             if __connect == socket.CONNECTING:
                 mainUI.showUpPage(mainUI.LOGINPAGE)
+                self.resetConnectPage()
             elif __connect == socket.ERRORCONNECT:
                 self.showErrConnection()
             elif __connect == socket.SERVEROFFLINE:
@@ -121,3 +122,8 @@ class connect(tk.Frame):
     def closePop(self):
         self.__data["ip"] = None
         self.__errWindows.destroy()
+
+    def resetConnectPage(self):
+        self.__data["ip"] = None
+        self.__ipInput.clear()
+        self.focus_set()

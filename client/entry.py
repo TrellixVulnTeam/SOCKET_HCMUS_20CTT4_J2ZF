@@ -47,6 +47,8 @@ class EntryWithPlaceholder(tk.Entry):
             self.put_placeholder()
             if self.__PASSWORD == "yes":
                 self['show'] = "*"
+    def refocus(self):
+        self.focus_set()
 class EntryWithPickerDay(tk.Entry):
     def __init__(self, master=None, placeholder="dd/mm/yyyy", color='grey'):
         super().__init__(master)
@@ -79,6 +81,11 @@ class EntryWithPickerDay(tk.Entry):
 
     def foc_out(self, *args):
         if not self.get():
+            self.put_placeholder()
+
+    def clear(self, *args):
+        if self['fg'] == self.default_fg_color:
+            self.delete('0', 'end')
             self.put_placeholder()
 
     def initPicker(self, widget=None, formatStr=None):
@@ -242,6 +249,7 @@ class EntryWithPickerDay(tk.Entry):
             self.widget.insert(0, self.full_date)
         except AttributeError:
             pass
+    
     def cleanTime(self, dateStr):
         __format = "%d/%m/%Y"
         __dtObj = datetime.strptime(dateStr, __format) 

@@ -115,6 +115,7 @@ class login(tk.Frame):
             if __login == socket.LOGINSUCCESSFUL:
                 mainUI.showUpPage(mainUI.TURNUPPAGE)
                 mainUI.changeAccountName(self.data["username"])
+                self.resetLogin()
             elif __login == socket.WRONGPASS:
                 self.showWrongLogIn()
             elif __login == socket.SERVEROFFLINE or __login == socket.ERRORCONNECT:
@@ -271,6 +272,7 @@ class login(tk.Frame):
         self.data["password"] = None
         self.__usInput.clear()
         self.__passInput.clear()
+        self.focus_set()
 
     def clearError(self, windows):
         self.isError = False
