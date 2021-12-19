@@ -76,16 +76,16 @@ class turnup(tk.Frame):
 
         # query input
         self.__queryInput = EntryWithPlaceholder(__wrapper, "Search...", "#7d7f8e")
-        self.__queryInput.place(x=23, y=92, width=96, height=30)
+        self.__queryInput.place(x=14, y=92, width=122, height=30)
         # date input
         self.__dateInput = EntryWithPickerDay(__wrapper,color="#7d7f8e")
-        self.__dateInput.place(x=130, y=92, width=96, height=30)
+        self.__dateInput.place(x=144, y=92, width=92, height=30)
         # search
         __iconSearch = tk.PhotoImage(file="./img/search.png")
         __searchButton = tk.Button(__wrapper, image=__iconSearch, 
             bg=self.__BUTTONBGCOLOR, activebackground=self.__BUTTONBGCOLOR_AC, 
             font=self.__BUTTONFONT)
-        __searchButton.place(x=236, y=90, width=36, height=36)
+        __searchButton.place(x=244, y=90, width=36, height=36)
         # background on entering widget
         __searchButton.bind("<Enter>", 
             func=lambda e: __searchButton.config(
@@ -147,8 +147,6 @@ class turnup(tk.Frame):
             self.data["value"] = str(self.__queryInput.get())
             self.data["date"] = str(self.__dateInput.get())
             __result = socket.sendRequest("tracking", self.data["value"], self.data["date"], " ")
-            self.__dateInput.clear()
-            self.__queryInput.clear()
             self.data["value"] = None
             self.data["date"] = None
             if __result == socket.SERVEROFFLINE or __result == socket.ERRORCONNECT:
