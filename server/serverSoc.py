@@ -56,7 +56,6 @@ class serverSoc:
             if header_msg:
                 header_msg_length = int(header_msg)
                 msg = conn.recv(header_msg_length).decode(self.__FORMAT)
-                print(msg)
                 return msg
         except:
             return None
@@ -68,7 +67,6 @@ class serverSoc:
         send_length += b' ' * (self.__HEADER_SIZE - len(send_length))
         conn.send(send_length)
         conn.send(message)
-        print(message)
 
     def run(self):
         __isUIExist = True
@@ -81,9 +79,7 @@ class serverSoc:
                 self.__server.listen()
                 __ISRUN = True
             else:
-                __ISRUN = False
                 self.__server.close()
-
             while __ISRUN:
                 # conn is a pointer point to client if server connecting, addr is client's ip and port
                 if not self.ui.ISONLINE and len(self.__CLIENTS) == 0:
@@ -94,7 +90,8 @@ class serverSoc:
                 print(not self.ui.ISONLINE and len(self.__CLIENTS) == 0)
                 
                 if conn.fileno() != -1:
-                    self.ui.creatItemClient(addr[0], addr[1])
+                    if self.ui.ISONLINE:
+                        self.ui.creatItemClient(addr[0], addr[1])
                     self.__CLIENTS.append((conn, addr))
                     thread = threading.Thread(
                         target=self.handle_client, args=(conn, addr))
@@ -141,8 +138,9 @@ class serverSoc:
                     self.__CLIENTS.remove((conn, addr))
                     conn.close()
                     print(self.__CLIENTS)
-                    self.ui.creatItemClient(
-                        addr[0], addr[1], self.__DISCONNECTEDSTATUS)
+                    if self.ui.ISONLINE:
+                        self.ui.creatItemClient(
+                            addr[0], addr[1], self.__DISCONNECTEDSTATUS)
                     __ISRUN = False
                     break
 
@@ -236,11 +234,20 @@ class serverSoc:
                         print(self.__CLIENTS)
                         __ISRUN = False
                         break
-                    
-                    data = self.crData.query(province, date)
-                    print(data)
-                    self.send(conn, json.dumps(data))
-
+                    try:
+                        data = str(self.crData.query(province, date))
+                        print(data)
+                        # self.send(conn, data)
+                        # receive date
+                        # result
+                        if data:
+                            result = [{'resultAdrress': province, 'resultTodayCases': data}]
+                        else:
+                            result = [{'resultAdrress': province, 'resultTodayCases': "NaN"}]
+                        self.send(conn, json.dumps(result))
+                    except:
+                        result = [{'resultAdrress': province, 'resultTodayCases': "WrongName"}]
+                        self.send(conn, json.dumps(result))
                     
         except:
             conn.close()

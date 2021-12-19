@@ -43,7 +43,6 @@ class clientSocket():
         __send_length += b' ' * (self.__HEADER_SIZE - len(__send_length))
         self.__client.send(__send_length)
         self.__client.send(__message)
-        print(__message)
 
     def receive(self):
         __header_msg = self.__client.recv(
@@ -51,7 +50,6 @@ class clientSocket():
         if __header_msg:
             header_msg_length = int(__header_msg)
             msg = self.__client.recv(header_msg_length).decode(self.__FORMAT)
-            print(msg)
             return msg
 
     def sendRequest(self, request, attachment_1, attachment_2, attachment_3):
@@ -113,7 +111,7 @@ class clientSocket():
             else:
                 print("server is offline")
                 self.__client.close()
-                return self.SERVEROFFLINE
+                return self.ERRORCONNECT
             
         except:
             print("wrong HOST IP")
