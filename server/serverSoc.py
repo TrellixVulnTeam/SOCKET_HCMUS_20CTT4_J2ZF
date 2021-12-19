@@ -81,7 +81,9 @@ class serverSoc:
                 self.__server.listen()
                 __ISRUN = True
             else:
+                __ISRUN = False
                 self.__server.close()
+
             while __ISRUN:
                 # conn is a pointer point to client if server connecting, addr is client's ip and port
                 if not self.ui.ISONLINE and len(self.__CLIENTS) == 0:
