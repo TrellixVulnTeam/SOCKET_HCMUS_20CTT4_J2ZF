@@ -113,7 +113,10 @@ class crawlDataCov:
                     isFound = True
                     print(item)
                     itemResult["resultAdrress"] = item
-                    itemResult["resultTodayCases"] = __data[time][item]
+                    try:
+                        itemResult["resultTodayCases"] = __data[time][item]
+                    except:
+                        return [{'resultAdrress': None, 'resultTodayCases': "NaN"}]
                     result.append(itemResult)
                     itemResult = {'resultAdrress': None, 'resultTodayCases': "NaN"}
             if not isFound:

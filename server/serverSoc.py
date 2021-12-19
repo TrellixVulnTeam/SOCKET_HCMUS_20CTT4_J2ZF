@@ -234,20 +234,8 @@ class serverSoc:
                         print(self.__CLIENTS)
                         __ISRUN = False
                         break
-                    try:
-                        data = str(self.crData.query(province, date))
-                        print(data)
-                        # self.send(conn, data)
-                        # receive date
-                        # result
-                        if data:
-                            result = [{'resultAdrress': province, 'resultTodayCases': data}]
-                        else:
-                            result = [{'resultAdrress': province, 'resultTodayCases': "NaN"}]
-                        self.send(conn, json.dumps(result))
-                    except:
-                        result = [{'resultAdrress': province, 'resultTodayCases': "WrongName"}]
-                        self.send(conn, json.dumps(result))
+                    data = self.crData.query(province, date)
+                    self.send(conn, json.dumps(data))
                     
         except:
             conn.close()
