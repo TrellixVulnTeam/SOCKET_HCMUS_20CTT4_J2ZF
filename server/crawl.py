@@ -53,11 +53,11 @@ class crawlDataCov:
             __dataOf.pop(0)
             __dataOf.pop()
             # get data of 63 address
-            for count in range(0,62):
-                if __dataOf[count].replace('\"','') == '':
-                    __listDataAddress[__headerName[count].replace('\"','')] = 0
+            for __place in self.__PlaceName:
+                if __dataOf[self.__PlaceName.index(__place)].replace('\"','') == '':
+                    __listDataAddress[__place] = 0
                 else:
-                    __listDataAddress[__headerName[count].replace('\"','')] = int(__dataOf[count].replace('\"',''))
+                    __listDataAddress[__place] = int(__dataOf[self.__PlaceName.index(__place)].replace('\"',''))
             __dataCov[__date] = __listDataAddress
         return __dataCov
 
