@@ -92,7 +92,10 @@ class signup(tk.Frame):
     def readAndSend(self, socket, mainUI):
         if (self.__newusInput.get() != "New Username") and (
             self.__newpassInput.get() != "New Password") and (
-            self.__confirmPassInput.get() != "Confirm password"):
+            self.__confirmPassInput.get() != "Confirm password") and (
+            self.__newusInput.get() != "") and (
+            self.__newpassInput.get() != "") and (
+            self.__confirmPassInput.get() != ""):
             if self.__newpassInput.get() != self.__confirmPassInput.get():
                 self.__showWarning()
             else:
@@ -106,7 +109,10 @@ class signup(tk.Frame):
                     self.showErrorSignUP()
                 elif __signup == socket.SERVEROFFLINE or __signup == socket.ERRORCONNECT:
                     mainUI.showError()
-
+                    self.resetSignUp()
+                    mainUI.showUpPage(mainUI.CONNECTPAGE)
+        else:
+            self.showErrSyntaxSignUp()
     def toBack(self, mainUI):
         self.resetSignUp()
         mainUI.showUpPage(mainUI.LOGINPAGE)
@@ -190,6 +196,45 @@ class signup(tk.Frame):
     def clearError(self, windows):
         self.isError = False
         windows.destroy()
+
+    def showErrSyntaxSignUp(self):
+        __ErrorPageBGCOLOR = "#f0f0f0"
+        __LabelContentFGCOLOR = "#494b59"
+        __LabelErrorFGCOLOR = "#bb0000"
+        SyntaxErrPop = tk.Toplevel()
+        SyntaxErrPop.title("Syntax Error")
+        SyntaxErrPop.geometry("180x147")
+        SyntaxErrPop.config(bg=__ErrorPageBGCOLOR)
+        SyntaxErrPop.iconbitmap(r"./img/err.ico")
+        SyntaxErrPop.resizable(width = False, height = False)
+
+        __errFrame = tk.Frame(SyntaxErrPop, bg = __ErrorPageBGCOLOR)
+        __errFrame.place(x = 0, y = 0, width=180, height=147)       
+
+        __labelErrContent = tk.Label(__errFrame, text="Oops..", 
+            bg=__ErrorPageBGCOLOR, fg=__LabelContentFGCOLOR, 
+            font="roboto 24 normal")
+        __labelErrContent.place(x=45 ,y=20)
+
+        __labelErr = tk.Label(__errFrame, text="Syntax Error", 
+            bg=__ErrorPageBGCOLOR, fg=__LabelErrorFGCOLOR, 
+            font="roboto 16 normal")
+        __labelErr.place(x=32,y=55)
+
+        # again button
+        __againButton = tk.Button(__errFrame, text = "Try Again", 
+            bg=self.__BUTTONBGCOLOR, fg=self.__BUTTONFGCOLOR, 
+            activebackground=self.__BUTTONBGCOLOR_AC, activeforeground=self.__BUTTONFGCOLOR_AC, 
+            font=self.__BUTTONFONT)
+        __againButton.place(x=49, y=95, width=81, height=36)
+        # background on entering widget
+        __againButton.bind("<Enter>", func=lambda e: __againButton.config(
+            background=self.__BUTTONBGCOLOR_AC, cursor="hand2"))
+        # background color on leving widget
+        __againButton.bind("<Leave>", func=lambda e: __againButton.config(
+            background=self.__BUTTONBGCOLOR, cursor="hand2"))
+        #try agian
+        __againButton.bind("<Button-1>", func=lambda e: SyntaxErrPop.destroy())
 
     def resetSignUp(self):
         self.__newusInput.clear()

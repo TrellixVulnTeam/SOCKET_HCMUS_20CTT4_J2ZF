@@ -34,5 +34,13 @@
   "vietnam": {
     "username": "vietnam",
     "password": "hcmus"
+  },
+  "hcmus": {
+    "username": "hcmus",
+    "password": "mmt"
+  },
+  "20120503": {
+    "username": "20120503",
+    "password": "20120503"
   }
 }

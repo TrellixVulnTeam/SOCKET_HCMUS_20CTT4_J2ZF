@@ -103,7 +103,9 @@ class clientSocket():
         __ADDRESS = (self.__HOST, self.__PORT)
         print(__ADDRESS)
         try:
+            self.__client.settimeout(1)
             self.__client.connect(__ADDRESS)
+            self.__client.settimeout(None)
             if self.receive() == "open":
                 __RUN = True
                 print("chay")
@@ -112,6 +114,7 @@ class clientSocket():
                 print("server is offline")
                 self.__client.close()
                 return self.SERVEROFFLINE
+            
         except:
             print("wrong HOST IP")
             return self.ERRORCONNECT
@@ -120,9 +123,9 @@ class clientSocket():
         return self.__RESULTS
 
    
-# test = clientSocket()
-# if test.start("127.0.0.1"):
-#     print("connect successful")
+""" test = clientSocket()
+if test.start("192.168.242.1"):
+    print("connect successful") """
 # if (test.send_request("log in", "luat", "pro", " ")):
 #     print("continue")
 # if (test.send_request("tracking", "TP. Hồ Chí Minh", "17/12/2021", " ")):

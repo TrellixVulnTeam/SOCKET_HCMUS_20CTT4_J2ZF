@@ -12,6 +12,7 @@ class crawlDataCov:
         #source data from 
         self.__url = "https://vnexpress.net/microservice/sheet/type/covid19_2021_281"
         self.__pathToDataCov = "./database/dataCov.json"
+        self.__PlaceName = []
   
     def run(self):
         # print(self.crawlData())
@@ -30,6 +31,11 @@ class crawlDataCov:
         __headerName.pop(0)
         __headerName.pop()
         __headerName[1] = "TP. Hồ Chí Minh"
+
+        # get place name dict
+        for item in __headerName:
+            self.__PlaceName.append(item.replace('\"',''))
+        
         # build data
         __dataCov = {}
         __data.pop(0)
@@ -68,10 +74,53 @@ class crawlDataCov:
         json.dump(data, __dataFileCov, indent=3)
         __dataFileCov.close()
 
+    def createAcronym(self, strg):
+        if strg == "TP. Hồ Chí Minh":
+            return "HCM"
+        # add first letter
+        oupt = strg[0]
+        # iterate over string
+        for i in range(1, len(strg)):
+            if strg[i-1] == ' ':
+                # add letter next to space
+                oupt += strg[i]
+        # uppercase oupt
+        oupt = oupt.upper()
+        return oupt
+
+    def standardStr(self, strg):
+        strg = strg.title()
+        if strg.find("Tp") == 0:
+            strg = strg.replace("Tp", "TP")
+        return strg
+
     def query(self, city, time):
+        city = self.standardStr(city)
         __dataFileCov = open(self.__pathToDataCov, "r")
         __data = json.load(__dataFileCov)
-        return __data[time][city]
+        result = []
+        itemResult = {'resultAdrress': None, 'resultTodayCases': "NaN"}
+        try:
+            itemResult["resultAdrress"] = city
+            itemResult["resultTodayCases"] = __data[time][city]
+            result.append(itemResult)
+            return result
+        except:
+            isFound = False
+            city = city.upper()
+            for item in self.__PlaceName:
+                if city == self.createAcronym(item):
+                    isFound = True
+                    print(item)
+                    itemResult["resultAdrress"] = item
+                    itemResult["resultTodayCases"] = __data[time][item]
+                    result.append(itemResult)
+                    itemResult = {'resultAdrress': None, 'resultTodayCases': "NaN"}
+            if not isFound:
+                result.append({'resultAdrress': None, 'resultTodayCases': "NaN"})
+            return result
+            
+
     
     
 

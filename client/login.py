@@ -106,7 +106,7 @@ class login(tk.Frame):
 
     #read data from entry
     def readAndSend(self, socket, mainUI):
-        if (self.__usInput.get() != "Username" and self.__passInput.get() != "Password") or (
+        if (self.__usInput.get() != "Username" and self.__passInput.get() != "Password") and (
             self.__usInput.get() != "" and self.__passInput.get() != ""):
             self.isLogin = True
             self.data["username"] = str(self.__usInput.get())
@@ -192,14 +192,14 @@ class login(tk.Frame):
         __ErrorPageBGCOLOR = "#f0f0f0"
         __LabelContentFGCOLOR = "#494b59"
         __LabelErrorFGCOLOR = "#bb0000"
-        pop = tk.Toplevel()
-        pop.title("LogIn Failed")
-        pop.geometry("180x147")
-        pop.config(bg=__ErrorPageBGCOLOR)
-        pop.iconbitmap(r"./img/err.ico")
-        pop.resizable(width = False, height = False)
+        SyntaxErrPop = tk.Toplevel()
+        SyntaxErrPop.title("LogIn Failed")
+        SyntaxErrPop.geometry("180x147")
+        SyntaxErrPop.config(bg=__ErrorPageBGCOLOR)
+        SyntaxErrPop.iconbitmap(r"./img/err.ico")
+        SyntaxErrPop.resizable(width = False, height = False)
 
-        __errFrame = tk.Frame(pop, bg = __ErrorPageBGCOLOR)
+        __errFrame = tk.Frame(SyntaxErrPop, bg = __ErrorPageBGCOLOR)
         __errFrame.place(x = 0, y = 0, width=180, height=147)       
 
         __labelErrContent = tk.Label(__errFrame, text="Oops..", 
@@ -207,10 +207,10 @@ class login(tk.Frame):
             font="roboto 24 normal")
         __labelErrContent.place(x=45 ,y=20)
 
-        __labelErr = tk.Label(__errFrame, text="User Not Found", 
+        __labelErr = tk.Label(__errFrame, text="Syntax Error", 
             bg=__ErrorPageBGCOLOR, fg=__LabelErrorFGCOLOR, 
             font="roboto 16 normal")
-        __labelErr.place(x=18 ,y=55)
+        __labelErr.place(x=32 ,y=55)
 
         # again button
         __againButton = tk.Button(__errFrame, text = "Try Again", 
@@ -225,20 +225,20 @@ class login(tk.Frame):
         __againButton.bind("<Leave>", func=lambda e: __againButton.config(
             background=self.__BUTTONBGCOLOR, cursor="hand2"))
         #try agian
-        __againButton.bind("<Button-1>", func=lambda e: __errFrame.destroy())
+        __againButton.bind("<Button-1>", func=lambda e: SyntaxErrPop.destroy())
 
     def showWrongLogIn(self):
         self.isError = True
         __ErrorPageBGCOLOR = "#f0f0f0"
         __LabelContentFGCOLOR = "#bb0000"
-        pop = tk.Toplevel()
-        pop.title("Error")
-        pop.geometry("216x160")
-        pop.config(bg=__ErrorPageBGCOLOR)
-        pop.iconbitmap(r"./img/err.ico")
-        pop.resizable(width = False, height = False)
+        WrongLogInPop = tk.Toplevel()
+        WrongLogInPop.title("Error")
+        WrongLogInPop.geometry("216x160")
+        WrongLogInPop.config(bg=__ErrorPageBGCOLOR)
+        WrongLogInPop.iconbitmap(r"./img/err.ico")
+        WrongLogInPop.resizable(width = False, height = False)
 
-        __errFrame = tk.Frame(pop, bg = __ErrorPageBGCOLOR)
+        __errFrame = tk.Frame(WrongLogInPop, bg = __ErrorPageBGCOLOR)
         __errFrame.place(x = 0, y = 0, width=216, height=160)       
 
         __labelErrContent = tk.Label(__errFrame, text="Wrong !!!", 
@@ -265,7 +265,7 @@ class login(tk.Frame):
         __againButton.bind("<Leave>", func=lambda e: __againButton.config(
             background=self.__BUTTONBGCOLOR, cursor="hand2"))
         #try agian
-        __againButton.bind("<Button-1>", func=lambda e: self.clearError(pop))
+        __againButton.bind("<Button-1>", func=lambda e: self.clearError(WrongLogInPop))
  
     def resetLogin(self):
         self.data["username"] = None

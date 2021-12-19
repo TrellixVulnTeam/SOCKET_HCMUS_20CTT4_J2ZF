@@ -6,11 +6,13 @@ import requests
 import json
 import time
 import os
+from datetime import datetime
 class crawlDataCov:
     def __init__(self) -> None:
         #source data from 
         self.__url = "https://vnexpress.net/microservice/sheet/type/covid19_2021_281"
-        self.__pathToDataCov = "./dataCov.json"
+        self.__pathToDataCov = "./database/dataCov.json"
+        self.__PlaceName = []
   
     def run(self):
         # print(self.crawlData())
@@ -29,6 +31,11 @@ class crawlDataCov:
         __headerName.pop(0)
         __headerName.pop()
         __headerName[1] = "TP. Hồ Chí Minh"
+
+        # get place name dict
+        for item in __headerName:
+            self.__PlaceName.append(item.replace('\"',''))
+        
         # build data
         __dataCov = {}
         __data.pop(0)
@@ -42,6 +49,7 @@ class crawlDataCov:
             __dataOf = __dataOfDate.split(',')
             __listDataAddress = {}
             __date = __dataOf[0].replace('\"','') + "/2021"
+            __date = self.cleanTime(__date)
             __dataOf.pop(0)
             __dataOf.pop()
             # get data of 63 address
@@ -53,6 +61,11 @@ class crawlDataCov:
             __dataCov[__date] = __listDataAddress
         return __dataCov
 
+    def cleanTime(self, dateStr):
+        __format = "%d/%m/%Y"
+        __dtObj = datetime.strptime(dateStr, __format) 
+        return __dtObj.strftime(__format)
+
     def writeToLocal(self, data):
         if not os.path.exists(self.__pathToDataCov):
             __dataFileCov = open(self.__pathToDataCov, "x")
@@ -61,21 +74,64 @@ class crawlDataCov:
         json.dump(data, __dataFileCov, indent=3)
         __dataFileCov.close()
 
+    def createAcronym(self, strg):
+        if strg == "TP. Hồ Chí Minh":
+            return "HCM"
+        # add first letter
+        oupt = strg[0]
+        # iterate over string
+        for i in range(1, len(strg)):
+            if strg[i-1] == ' ':
+                # add letter next to space
+                oupt += strg[i]
+        # uppercase oupt
+        oupt = oupt.upper()
+        return oupt
+
+    def standardStr(self, strg):
+        strg = strg.title()
+        if strg.find("Tp") == 0:
+            strg = strg.replace("Tp", "TP")
+        return strg
+
     def query(self, city, time):
+        city = self.standardStr(city)
         __dataFileCov = open(self.__pathToDataCov, "r")
         __data = json.load(__dataFileCov)
-        return __data[time][city]
+        result = []
+        itemResult = {'resultAdrress': None, 'resultTodayCases': None}
+        try:
+            itemResult["resultAdrress"] = city
+            itemResult["resultTodayCases"] = __data[time][city]
+            result.append(itemResult)
+            return result
+        except:
+            try:
+                city = city.upper()
+                for item in self.__PlaceName:
+                    if city == self.createAcronym(item):
+                        itemResult["resultAdrress"] = item
+                        itemResult["resultTodayCases"] = __data[time][item]
+                        result.append(itemResult)
+                return result
+            except:
+                itemResult["resultAdrress"] = city
+                itemResult["resultTodayCases"] = "NaN"
+                result.append(itemResult)
+                return result
+        
+
     
     
 
-def main():
-    cov = crawlDataCov()
-    # cov.run()
-    # str = "TP. Hồ Chí Minh"
-    # print(a)
-    cov.run()
-    a = cov.query("Quảng Ngãi", "15/12/2021")
-    print(a)
+# def main():
+#     cov = crawlDataCov()
+#     # cov.run()
+#     # str = "TP. Hồ Chí Minh"
+#     # print(a)
+#     cov.run()
+#     a = cov.query("Quảng Ngãi", "15/12/2021")
+#     print(a)
 
-if __name__ == "__main__":
-    main()
+# if __name__ == "__main__":
+#     main()
