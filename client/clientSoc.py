@@ -61,7 +61,6 @@ class clientSocket():
                     self.send(attachment_1) #ID
                     self.send(attachment_2) #PASS
                     __result = self.receive()
-                    print(__result)
                     if __result == self.LOGINSUCCESSFUL:
                         return self.LOGINSUCCESSFUL
                     elif __result == self.WRONGPASS:
@@ -71,14 +70,12 @@ class clientSocket():
                     self.send(attachment_1) # ID
                     self.send(attachment_2) # PASS
                     __result = self.receive()
-                    print(__result)
                     if __result == self.SIGNUPSUCCESSFULL:
                         return self.SIGNUPSUCCESSFULL
                     elif __result == self.IDEXIST:
                         return self.IDEXIST
                 if request == self.__LOGOUT:
                     self.send(self.__LOGOUT)
-                    print(self.receive())
                 if request == self.__TRACKING:
                     self.send(attachment_1) #place
                     self.send(attachment_2) #date
@@ -89,51 +86,25 @@ class clientSocket():
                     self.__client.close()
                     return self.DISCONNECTEDCONN
             else:
-                print("server offline")
                 return self.SERVEROFFLINE
         except:
-            print("server crash")
             return self.ERRORCONNECT
 
     def start(self, ip):
         self.__HOST = ip
         self.__client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         __ADDRESS = (self.__HOST, self.__PORT)
-        print(__ADDRESS)
         try:
             self.__client.settimeout(1)
             self.__client.connect(__ADDRESS)
             self.__client.settimeout(None)
             if self.receive() == "open":
                 __RUN = True
-                print("chay")
                 return self.CONNECTING
             else:
-                print("server is offline")
                 self.__client.close()
                 return self.ERRORCONNECT
-            
         except:
-            print("wrong HOST IP")
             return self.ERRORCONNECT
 
-    def CASES_results(self):
-        return self.__RESULTS
 
-   
-""" test = clientSocket()
-if test.start("192.168.242.1"):
-    print("connect successful") """
-# if (test.send_request("log in", "luat", "pro", " ")):
-#     print("continue")
-# if (test.send_request("tracking", "TP. Hồ Chí Minh", "17/12/2021", " ")):
-#     print (f"Số ca hôm nay của TP. Hồ Chí Minh là: {test.CASES_return()}")
-
-# if (test.send_request("quit", "luat", "pro", " ")):
-#     print("quit")
-
-# if test.start("127.0.0.1"):
-#     print("connect successful")
-
-# if (test.send_request("tracking", "Đà Nẵng", "17/12/2021", " ")):
-#     print (f"Số ca hôm nay của Đà Nẵng là: {test.CASES_return()}")

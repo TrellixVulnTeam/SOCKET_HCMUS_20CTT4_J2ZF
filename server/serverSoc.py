@@ -87,7 +87,6 @@ class serverSoc:
                     __ISRUN = False
                     break
                 conn, addr = self.__server.accept()
-                print(not self.ui.ISONLINE and len(self.__CLIENTS) == 0)
                 
                 if conn.fileno() != -1:
                     if self.ui.ISONLINE:
@@ -109,20 +108,17 @@ class serverSoc:
                 __ISRUN = False
             else:
                 self.send(conn, "open")
-                print("da handle")
             while __ISRUN:
                 if not self.ui.ISONLINE:
                     self.send(conn, "close")
                     self.__CLIENTS.remove((conn, addr))
                     conn.close()
-                    print(self.__CLIENTS)
                     break
                 else:
                     self.send(conn, "open")
                 __REQUEST = self.receive(conn)
 
                 if __REQUEST == None:
-                    print(__REQUEST)
                     self.__CLIENTS.remove((conn, addr))
                     conn.close()
                     self.ui.creatItemClient(
@@ -137,7 +133,6 @@ class serverSoc:
                 if __REQUEST == self.__DISCONNECTED:
                     self.__CLIENTS.remove((conn, addr))
                     conn.close()
-                    print(self.__CLIENTS)
                     if self.ui.ISONLINE:
                         self.ui.creatItemClient(
                             addr[0], addr[1], self.__DISCONNECTEDSTATUS)
@@ -164,7 +159,6 @@ class serverSoc:
                     if PASSWORD == None:
                         self.__CLIENTS.remove((conn, addr))
                         conn.close()
-                        print(self.__CLIENTS)
                         self.ui.creatItemClient(
                             addr[0], addr[1], self.__ERRORCONNECTIONSTATUS)
                         __ISRUN = False
@@ -190,7 +184,6 @@ class serverSoc:
                                 addr[0], addr[1], self.__ERRORCONNECTIONSTATUS)
                             self.__CLIENTS.remove((conn, addr))
                             conn.close()
-                            print(self.__CLIENTS)
                             __ISRUN = False
                             break
                         PASSWORD = self.receive(conn)
@@ -222,7 +215,6 @@ class serverSoc:
                             addr[0], addr[1], self.__ERRORCONNECTIONSTATUS)
                         self.__CLIENTS.remove((conn, addr))
                         conn.close()
-                        print(self.__CLIENTS)
                         __ISRUN = False
                         break
                     date = self.receive(conn)
@@ -231,7 +223,6 @@ class serverSoc:
                             addr[0], addr[1], self.__ERRORCONNECTIONSTATUS)
                         self.__CLIENTS.remove((conn, addr))
                         conn.close()
-                        print(self.__CLIENTS)
                         __ISRUN = False
                         break
                     data = self.crData.query(province, date)
@@ -240,7 +231,6 @@ class serverSoc:
         except:
             conn.close()
             self.__CLIENTS.remove((conn, addr))
-            print(self.__CLIENTS)
             self.ui.creatItemClient(
                 addr[0], addr[1], self.__ERRORCONNECTIONSTATUS)
 

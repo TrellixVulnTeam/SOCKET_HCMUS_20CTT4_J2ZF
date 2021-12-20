@@ -15,8 +15,6 @@ class crawlDataCov:
         self.__PlaceName = []
   
     def run(self):
-        # print(self.crawlData())
-        # self.writeToLocal(self.crawlData())
         __timeLoop = 60*60
         while True:
             self.writeToLocal(self.crawlData())
@@ -42,9 +40,6 @@ class crawlDataCov:
         __data.pop(0)
         __data.pop() 
         
-        # a = __data[len(__data)-4].split(',')
-        # a.pop(0)
-        # print(int(a[1].replace('\"','')))
         for __dataOfDate in __data:
             __dataOf = __dataOfDate.split(',')
             __listDataAddress = {}
@@ -111,7 +106,6 @@ class crawlDataCov:
             for item in self.__PlaceName:
                 if city == self.createAcronym(item):
                     isFound = True
-                    print(item)
                     itemResult["resultAdrress"] = item
                     try:
                         itemResult["resultTodayCases"] = __data[time][item]
@@ -123,18 +117,3 @@ class crawlDataCov:
                 result.append({'resultAdrress': None, 'resultTodayCases': "NaN"})
             return result
             
-
-    
-    
-
-# def main():
-#     cov = crawlDataCov()
-#     # cov.run()
-#     # str = "TP. Hồ Chí Minh"
-#     # print(a)
-#     cov.run()
-#     a = cov.query("Quảng Ngãi", "15/12/2021")
-#     print(a)
-
-# if __name__ == "__main__":
-#     main()

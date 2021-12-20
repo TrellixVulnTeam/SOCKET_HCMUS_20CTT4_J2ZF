@@ -1,10 +1,8 @@
-('C:\\Users\\Viktor\\OneDrive - '
- 'VNU-HCMUS\\Desktop\\SOCKET_HCMUS_20CTT4\\server\\build\\server\\server.exe',
+('C:\\Users\\Viktor\\Downloads\\SOCKET_HCMUS_20CTT4\\server\\build\\server\\server.exe',
  False,
  False,
  True,
- 'C:\\Users\\Viktor\\OneDrive - '
- 'VNU-HCMUS\\Desktop\\SOCKET_HCMUS_20CTT4\\winEnv\\lib\\site-packages\\PyInstaller\\bootloader\\images\\icon-windowed.ico',
+ '.\\img\\serverIcon.ico',
  None,
  False,
  False,
@@ -14,76 +12,59 @@
  None,
  None,
  None,
- 'C:\\Users\\Viktor\\OneDrive - '
- 'VNU-HCMUS\\Desktop\\SOCKET_HCMUS_20CTT4\\server\\build\\server\\server.pkg',
+ 'C:\\Users\\Viktor\\Downloads\\SOCKET_HCMUS_20CTT4\\server\\build\\server\\server.pkg',
  [('PYZ-00.pyz',
-   'C:\\Users\\Viktor\\OneDrive - '
-   'VNU-HCMUS\\Desktop\\SOCKET_HCMUS_20CTT4\\server\\build\\server\\PYZ-00.pyz',
+   'C:\\Users\\Viktor\\Downloads\\SOCKET_HCMUS_20CTT4\\server\\build\\server\\PYZ-00.pyz',
    'PYZ'),
   ('struct',
    'C:\\Users\\Viktor\\AppData\\Local\\Programs\\Python\\Python39\\lib\\struct.pyo',
    'PYMODULE'),
   ('pyimod01_os_path',
-   'C:\\Users\\Viktor\\OneDrive - '
-   'VNU-HCMUS\\Desktop\\SOCKET_HCMUS_20CTT4\\winEnv\\lib\\site-packages\\PyInstaller\\loader\\pyimod01_os_path.pyc',
+   'C:\\Users\\Viktor\\Downloads\\SOCKET_HCMUS_20CTT4\\winVenv\\lib\\site-packages\\PyInstaller\\loader\\pyimod01_os_path.pyc',
    'PYMODULE'),
   ('pyimod02_archive',
-   'C:\\Users\\Viktor\\OneDrive - '
-   'VNU-HCMUS\\Desktop\\SOCKET_HCMUS_20CTT4\\winEnv\\lib\\site-packages\\PyInstaller\\loader\\pyimod02_archive.pyc',
+   'C:\\Users\\Viktor\\Downloads\\SOCKET_HCMUS_20CTT4\\winVenv\\lib\\site-packages\\PyInstaller\\loader\\pyimod02_archive.pyc',
    'PYMODULE'),
   ('pyimod03_importers',
-   'C:\\Users\\Viktor\\OneDrive - '
-   'VNU-HCMUS\\Desktop\\SOCKET_HCMUS_20CTT4\\winEnv\\lib\\site-packages\\PyInstaller\\loader\\pyimod03_importers.pyc',
+   'C:\\Users\\Viktor\\Downloads\\SOCKET_HCMUS_20CTT4\\winVenv\\lib\\site-packages\\PyInstaller\\loader\\pyimod03_importers.pyc',
    'PYMODULE'),
   ('pyimod04_ctypes',
-   'C:\\Users\\Viktor\\OneDrive - '
-   'VNU-HCMUS\\Desktop\\SOCKET_HCMUS_20CTT4\\winEnv\\lib\\site-packages\\PyInstaller\\loader\\pyimod04_ctypes.pyc',
+   'C:\\Users\\Viktor\\Downloads\\SOCKET_HCMUS_20CTT4\\winVenv\\lib\\site-packages\\PyInstaller\\loader\\pyimod04_ctypes.pyc',
    'PYMODULE'),
   ('pyiboot01_bootstrap',
-   'C:\\Users\\Viktor\\OneDrive - '
-   'VNU-HCMUS\\Desktop\\SOCKET_HCMUS_20CTT4\\winEnv\\lib\\site-packages\\PyInstaller\\loader\\pyiboot01_bootstrap.py',
+   'C:\\Users\\Viktor\\Downloads\\SOCKET_HCMUS_20CTT4\\winVenv\\lib\\site-packages\\PyInstaller\\loader\\pyiboot01_bootstrap.py',
    'PYSOURCE'),
   ('pyi_rth_pkgutil',
-   'C:\\Users\\Viktor\\OneDrive - '
-   'VNU-HCMUS\\Desktop\\SOCKET_HCMUS_20CTT4\\winEnv\\Lib\\site-packages\\PyInstaller\\hooks\\rthooks\\pyi_rth_pkgutil.py',
+   'C:\\Users\\Viktor\\Downloads\\SOCKET_HCMUS_20CTT4\\winVenv\\Lib\\site-packages\\PyInstaller\\hooks\\rthooks\\pyi_rth_pkgutil.py',
    'PYSOURCE'),
   ('pyi_rth_multiprocessing',
-   'C:\\Users\\Viktor\\OneDrive - '
-   'VNU-HCMUS\\Desktop\\SOCKET_HCMUS_20CTT4\\winEnv\\Lib\\site-packages\\PyInstaller\\hooks\\rthooks\\pyi_rth_multiprocessing.py',
+   'C:\\Users\\Viktor\\Downloads\\SOCKET_HCMUS_20CTT4\\winVenv\\Lib\\site-packages\\PyInstaller\\hooks\\rthooks\\pyi_rth_multiprocessing.py',
    'PYSOURCE'),
   ('pyi_rth_inspect',
-   'C:\\Users\\Viktor\\OneDrive - '
-   'VNU-HCMUS\\Desktop\\SOCKET_HCMUS_20CTT4\\winEnv\\Lib\\site-packages\\PyInstaller\\hooks\\rthooks\\pyi_rth_inspect.py',
+   'C:\\Users\\Viktor\\Downloads\\SOCKET_HCMUS_20CTT4\\winVenv\\Lib\\site-packages\\PyInstaller\\hooks\\rthooks\\pyi_rth_inspect.py',
+   'PYSOURCE'),
+  ('pyi_rth_certifi',
+   'C:\\Users\\Viktor\\Downloads\\SOCKET_HCMUS_20CTT4\\winVenv\\Lib\\site-packages\\_pyinstaller_hooks_contrib\\hooks\\rthooks\\pyi_rth_certifi.py',
    'PYSOURCE'),
   ('pyi_rth__tkinter',
-   'C:\\Users\\Viktor\\OneDrive - '
-   'VNU-HCMUS\\Desktop\\SOCKET_HCMUS_20CTT4\\winEnv\\Lib\\site-packages\\PyInstaller\\hooks\\rthooks\\pyi_rth__tkinter.py',
+   'C:\\Users\\Viktor\\Downloads\\SOCKET_HCMUS_20CTT4\\winVenv\\Lib\\site-packages\\PyInstaller\\hooks\\rthooks\\pyi_rth__tkinter.py',
    'PYSOURCE'),
   ('serverSoc',
-   'C:\\Users\\Viktor\\OneDrive - '
-   'VNU-HCMUS\\Desktop\\SOCKET_HCMUS_20CTT4\\server\\serverSoc.py',
+   'C:\\Users\\Viktor\\Downloads\\SOCKET_HCMUS_20CTT4\\server\\serverSoc.py',
    'PYSOURCE'),
   ('UI',
-   'C:\\Users\\Viktor\\OneDrive - '
-   'VNU-HCMUS\\Desktop\\SOCKET_HCMUS_20CTT4\\server\\UI.py',
+   'C:\\Users\\Viktor\\Downloads\\SOCKET_HCMUS_20CTT4\\server\\UI.py',
    'PYSOURCE'),
   ('crawl',
-   'C:\\Users\\Viktor\\OneDrive - '
-   'VNU-HCMUS\\Desktop\\SOCKET_HCMUS_20CTT4\\server\\crawl.py',
-   'PYSOURCE'),
-  ('bstTree',
-   'C:\\Users\\Viktor\\OneDrive - '
-   'VNU-HCMUS\\Desktop\\SOCKET_HCMUS_20CTT4\\server\\bstTree.py',
+   'C:\\Users\\Viktor\\Downloads\\SOCKET_HCMUS_20CTT4\\server\\crawl.py',
    'PYSOURCE'),
   ('userData',
-   'C:\\Users\\Viktor\\OneDrive - '
-   'VNU-HCMUS\\Desktop\\SOCKET_HCMUS_20CTT4\\server\\userData.py',
+   'C:\\Users\\Viktor\\Downloads\\SOCKET_HCMUS_20CTT4\\server\\userData.py',
    'PYSOURCE')],
  [],
  False,
  False,
- 1638883642,
+ 1639995185,
  [('runw.exe',
-   'C:\\Users\\Viktor\\OneDrive - '
-   'VNU-HCMUS\\Desktop\\SOCKET_HCMUS_20CTT4\\winEnv\\lib\\site-packages\\PyInstaller\\bootloader\\Windows-64bit\\runw.exe',
+   'C:\\Users\\Viktor\\Downloads\\SOCKET_HCMUS_20CTT4\\winVenv\\lib\\site-packages\\PyInstaller\\bootloader\\Windows-64bit\\runw.exe',
    'EXECUTABLE')])

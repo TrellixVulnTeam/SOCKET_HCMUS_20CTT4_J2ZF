@@ -3,7 +3,6 @@ from tkinter import Widget, ttk
 import time
 from datetime import datetime
 import calendar
-from TrieTree import TrieTree
 
 class EntryWithPlaceholder(tk.Entry):
     def __init__(self, master=None, placeholder="PLACEHOLDER", color='grey', password = "no"):

@@ -4,7 +4,7 @@
 block_cipher = None
 
 
-a = Analysis(['UI.py', 'connect.py', 'entry.py', 'login.py', 'signup.py', 'turnup.py'],
+a = Analysis(['UI.py', 'connect.py', 'entry.py', 'login.py', 'signup.py', 'turnup.py', 'clientSoc.py'],
              pathex=[],
              binaries=[],
              datas=[('fonts','fonts'),('img','img')],
@@ -33,7 +33,8 @@ exe = EXE(pyz,
           disable_windowed_traceback=False,
           target_arch=None,
           codesign_identity=None,
-          entitlements_file=None )
+          entitlements_file=None,
+          icon='.\\img\\favicon.ico')
 coll = COLLECT(exe,
                a.binaries,
                a.zipfiles,

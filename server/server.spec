@@ -4,7 +4,7 @@
 block_cipher = None
 
 
-a = Analysis(['serverSoc.py', 'UI.py', 'crawl.py', 'bstTree.py', 'userData.py'],
+a = Analysis(['serverSoc.py', 'UI.py', 'crawl.py', 'userData.py'],
              pathex=[],
              binaries=[],
              datas=[('img','img'), ('fonts','fonts'), ('database','database')],
@@ -33,7 +33,8 @@ exe = EXE(pyz,
           disable_windowed_traceback=False,
           target_arch=None,
           codesign_identity=None,
-          entitlements_file=None )
+          entitlements_file=None,
+          icon='.\\img\\serverIcon.ico')
 coll = COLLECT(exe,
                a.binaries,
                a.zipfiles,

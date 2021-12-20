@@ -1,5 +1,50 @@
-[
-	{"username": "test", "password": "2"},
-	{"username": "c", "password": "1"},
-	{"username": "c", "password": "1"}
-]
+{
+  "b": {
+    "username": "b",
+    "password": "1"
+  },
+  "c": {
+    "username": "c",
+    "password": "1"
+  },
+  "khai": {
+    "username": "khai",
+    "password": "nguyen"
+  },
+  "tuan": {
+    "username": "tuan",
+    "password": "khai"
+  },
+  "tuankhai": {
+    "username": "tuankhai",
+    "password": "nguyen"
+  },
+  "khaituan": {
+    "username": "khaituan",
+    "password": "nguyenle"
+  },
+  "khaile": {
+    "username": "khaile",
+    "password": "nguyen"
+  },
+  "khaivip": {
+    "username": "khaivip",
+    "password": "le"
+  },
+  "vietnam": {
+    "username": "vietnam",
+    "password": "hcmus"
+  },
+  "hcmus": {
+    "username": "hcmus",
+    "password": "mmt"
+  },
+  "20120503": {
+    "username": "20120503",
+    "password": "20120503"
+  },
+  "viet": {
+    "username": "viet",
+    "password": "1234"
+  }
+}
