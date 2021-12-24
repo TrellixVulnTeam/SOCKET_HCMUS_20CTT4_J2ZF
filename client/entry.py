@@ -176,7 +176,7 @@ class EntryWithPickerDay(tk.Entry):
         self.makeCalendar()
 
     def nextMonthFunc(self):
-        idCurrentMonth = self.monthNames.index(self.monthNames.get())
+        idCurrentMonth = self.monthNames.index(self.monthStr.get())
 
         try:
             self.monthStr.set(self.monthNames[idCurrentMonth + 1])

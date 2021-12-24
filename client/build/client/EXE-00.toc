@@ -70,7 +70,7 @@
  [],
  False,
  False,
- 1639994988,
+ 1640313958,
  [('runw.exe',
    'C:\\Users\\Viktor\\Downloads\\SOCKET_HCMUS_20CTT4\\winVenv\\lib\\site-packages\\PyInstaller\\bootloader\\Windows-64bit\\runw.exe',
    'EXECUTABLE')])
